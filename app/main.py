@@ -1,7 +1,7 @@
 
 # TODO: Define A
 """
-- Using NLTK, read in text.
+Using NLTK, read in text.
 """
 
 # TODO: A -> B
