@@ -1,34 +1,51 @@
 
 # TODO: Define A
 """
-Using NLTK, read in text.
+Input
+NLP:
+    - Sentiment analysis
+        > positive
+        > negative
+        > neutral
+    - Parts of Speech
+    - Import/Frequently-Occurring Words
 """
 
 # TODO: A -> B
+"""
+Use data from the significant sentences given from the text processed
+in A and send keywords to the web scraper for Google image searching.
+"""
 
 # TODO: Define B
 """
-- Determine genre
-- Sentiment analysis: average sentiment per chapter?
-    > positive
-    > negative
-    > neutral
-- Determine any other useful qualities of text?
+Web Scraping
+    - Google Image Search using keywords from A
+    - Download images
 """
 
 # TODO: B -> C
+"""
+Take the image results from B and transform them using computer vision
+tools in C.
+"""
 
 # TODO: Define C
 """
-Using the results of SA from B, transform the analysis
-into an image using mathematical functions:
-    >  Using the "sentiment mapper" from A
-    >  Generate an image
+Computer Vision
+    - Image Collage
+        > Read in downloaded images from B
+        > Find object contours and clip out
+        > Piece back together on large background (search for
+          using the "most important" word in the text)
 """
 
 # TODO: C -> D
+"""
+Send the processed and transformed visual data back to the user.
+"""
 
 # TODO: Define D
 """
-Return the image from C to the user in the specified format.
+Output
 """

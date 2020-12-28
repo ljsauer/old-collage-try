@@ -1,4 +1,5 @@
 nltk
 requests
 bs4
+numpy
 opencv-python
