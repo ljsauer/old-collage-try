@@ -1,5 +1,5 @@
-
-# TODO: Define A
+# A
+""""""
 """
 Input
 NLP:
@@ -8,29 +8,29 @@ NLP:
         > negative
         > neutral
     - Parts of Speech
-    - Import/Frequently-Occurring Words
+    - Important/Frequently-Occurring Words
 """
 
-# TODO: A -> B
+# A -> B
 """
 Use data from the significant sentences given from the text processed
 in A and send keywords to the web scraper for Google image searching.
 """
 
-# TODO: Define B
+# B
 """
 Web Scraping
     - Google Image Search using keywords from A
     - Download images
 """
 
-# TODO: B -> C
+# B -> C
 """
 Take the image results from B and transform them using computer vision
 tools in C.
 """
 
-# TODO: Define C
+# C
 """
 Computer Vision
     - Image Collage
@@ -40,12 +40,12 @@ Computer Vision
           using the "most important" word in the text)
 """
 
-# TODO: C -> D
+# C -> D
 """
 Send the processed and transformed visual data back to the user.
 """
 
-# TODO: Define D
+# D
 """
 Output
 """
