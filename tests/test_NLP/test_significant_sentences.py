@@ -19,3 +19,4 @@ class TestSignificantSentences(unittest.TestCase):
             "Texas toast."
         )
         self.assertTrue('text' in self.sig_sents.word_ranking.values())
+        self.assertFalse('goodbye' in self.sig_sents.word_ranking.values())

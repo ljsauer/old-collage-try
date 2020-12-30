@@ -19,8 +19,7 @@ class SignificantSentences:
 
         return [word for word in text_lower if word not in _stopwords]
 
-    def _rank_importance_of_words(self) -> (List[str]):
-        sentences = sent_tokenize(self.text)
+    def _rank_importance_of_words(self):
         word_frequency = FreqDist(self._remove_stopwords_from_text()).items()
 
         for i, (word, count) in enumerate(word_frequency):
@@ -29,20 +28,19 @@ class SignificantSentences:
             if word not in self.word_ranking.values():
                 self.word_ranking[i] = word
 
-        return sentences
-
     def _count_important_words_in_sentence(self) -> List[tuple]:
-        sentences = self._rank_importance_of_words()
+        sentences = sent_tokenize(self.text)
         results_with_counts = []
         for sentence in sentences:
             total_word_count = 0
             for word in self.word_ranking.values():
                 total_word_count += sentence.lower().count(word)
             results_with_counts.append((total_word_count, sentence))
-        results = sorted(results_with_counts, reverse=True)
-        return results
+
+        return sorted(results_with_counts, reverse=True)
 
     def get_significant_sentences(self) -> List[str]:
+        self._rank_importance_of_words()
         results_with_counts = self._count_important_words_in_sentence()
         result = [pair[1] for pair in results_with_counts]
         final_result = []
