@@ -6,7 +6,7 @@ import numpy as np
 
 
 class EdgeDetector:
-    def __init__(self, image, min_object_size=0.75):
+    def __init__(self, image, min_object_size=.10):
         self.image: np.array = image
         self.contours: List = []
         self.min_size: float = min_object_size
@@ -16,15 +16,15 @@ class EdgeDetector:
     def draw_image_as_contours(self):
         self.draw_edges_of_objects()
         contours_poly = [None] * len(self.contours)
-        boundRect = [None] * len(self.contours)
-        centers = [None] * len(self.contours)
-        radius = [None] * len(self.contours)
+        bounding_rects = [None] * len(self.contours)
+        # centers = [None] * len(self.contours)   # optional enclosing circle params
+        # radius = [None] * len(self.contours)
         cv2.drawContours(self.contour_mask, self.contours, -1, (200, 200, 55), -1)
         for i, c in enumerate(self.contours):
             contours_poly[i] = cv2.approxPolyDP(c, 3, True)
-            boundRect[i] = cv2.boundingRect(contours_poly[i])
-            centers[i], radius[i] = cv2.minEnclosingCircle(contours_poly[i])
-        self._crop_object_from_image(boundRect)
+            bounding_rects[i] = cv2.boundingRect(contours_poly[i])
+            # centers[i], radius[i] = cv2.minEnclosingCircle(contours_poly[i])
+        self._crop_object_from_image(bounding_rects)
 
     def draw_edges_of_objects(self):
         try:
@@ -42,12 +42,21 @@ class EdgeDetector:
         _mask = np.zeros(self.image.shape[:2], dtype='uint8')
         image_copy = self.image.copy()
         for rectangle in bounding_rects:
-            if rectangle[2]*rectangle[3] < self.min_size * self.image.shape[0] * self.image.shape[1]:
+            rectangle_area = rectangle[2] * rectangle[3]
+            target_size = self.min_size * self.image.shape[0] * self.image.shape[1]
+            if rectangle_area < target_size:
                 continue
-            (mask, background, foreground) = cv2.grabCut(image_copy, self.contour_mask*0, rectangle,
-                                                         background, foreground, iterCount=1,
-                                                         mode=cv2.GC_INIT_WITH_RECT)
-            output_mask = np.where((mask == cv2.GC_BGD) | (mask == cv2.GC_PR_BGD), 0, 1)
-            output_mask = (output_mask*255).astype('uint8')
-            obj_img = cv2.bitwise_and(image_copy, image_copy, mask=output_mask)
-            self.objects_in_image.append(obj_img)
+            try:
+                (mask, background, foreground) = cv2.grabCut(image_copy,
+                                                             self.contour_mask*0,
+                                                             rectangle,
+                                                             background,
+                                                             foreground,
+                                                             iterCount=1,
+                                                             mode=cv2.GC_INIT_WITH_RECT)
+                output_mask = np.where((mask == cv2.GC_BGD) | (mask == cv2.GC_PR_BGD), 0, 1)
+                output_mask = (output_mask * 255).astype('uint8')
+                obj_img = cv2.bitwise_and(image_copy, image_copy, mask=output_mask)
+                self.objects_in_image.append(obj_img)
+            except cv2.error:
+                "Trouble reading image from path"

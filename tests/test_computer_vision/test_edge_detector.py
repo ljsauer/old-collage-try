@@ -25,7 +25,11 @@ class TestEdgeDetector(unittest.TestCase):
     def test_finds_objects_in_image(self):
         self.ed.draw_image_as_contours()
         for obj in self.ed.objects_in_image:
+            obj = cv2.rectangle(obj,
+                                (10, 10),
+                                (25, 25),
+                                (0, 255, 0),
+                                2
+                                )
             cv2.imshow("Object found", obj)
             cv2.waitKey(0)
-
-
