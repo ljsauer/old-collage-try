@@ -8,6 +8,7 @@ numpy = "*"
 google-images-download = "*"
 pillow = "*"
 imutils = "*"
+shapely = "*"
 
 [dev-packages]
 
