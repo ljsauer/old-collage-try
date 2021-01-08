@@ -13,6 +13,7 @@ class ImageCollage:
         self.used_area: List[List[tuple]] = []
 
     def make_collage(self):
+        # TODO: Rename variables to make them make sense and refactor into smaller pieces
         background_size = self.background.shape[:2]
 
         for item in self.objects:
