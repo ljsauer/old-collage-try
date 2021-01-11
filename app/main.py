@@ -1,51 +1,45 @@
-# A
-""""""
-"""
-Input
-NLP:
-    - Sentiment analysis
-        > positive
-        > negative
-        > neutral
-    - Parts of Speech
-    - Important/Frequently-Occurring Words
-"""
+import os
+from typing import List
 
-# A -> B
-"""
-Use data from the significant sentences given from the text processed
-in A and send keywords to the web scraper for Google image searching.
-"""
+import cv2
+import numpy as np
 
-# B
-"""
-Web Scraping
-    - Google Image Search using keywords from A
-    - Download images
-"""
+from nltk.corpus import gutenberg
 
-# B -> C
-"""
-Take the image results from B and transform them using computer vision
-tools in C.
-"""
+from app.NLP.significant_sentences import SignificantSentences
+from app.computer_vision.image_collage import ImageCollage
+from app.computer_vision.image_processor import ImageProcessor
+from app.web_scraper.image_search import ImageSearch
 
-# C
-"""
-Computer Vision
-    - Image Collage
-        > Read in downloaded images from B
-        > Find object contours and clip out
-        > Piece back together on large background (search for
-          using the "most important" word in the text)
-"""
 
-# C -> D
-"""
-Send the processed and transformed visual data back to the user.
-"""
+class Tchotchkesque:
+    def __init__(self, text_body, n_search_words: int = 20):
+        self.significant_sents = SignificantSentences(text_body)
+        self.significant_sents.rank_importance_of_words(word_count=n_search_words)
+        self.tchotchkes = []
+        self.image_processor = ImageProcessor(self.significant_sents.important_words,
+                                              running_list=self.tchotchkes)
 
-# D
-"""
-Output
-"""
+    def _set_collage_background(self):
+        bg_keyword = self.significant_sents.important_words.get(1)
+        image_searcher = ImageSearch(keyword=f'{bg_keyword} high resolution',
+                                     download_path='background.jpg')
+        image_searcher.download_background_image()
+        return cv2.imread(os.path.join(image_searcher.download_path, 'background.jpg'))
+
+    def _gather_objects_for_collage(self):
+        self.image_processor.gather_images_from_web()
+        self.image_processor.process_images_in_download_path()
+        self.image_processor.cleanup_downloads()
+
+    def create_collage(self) -> np.array:
+        self._gather_objects_for_collage()
+        image_collage = ImageCollage(objects=self.tchotchkes,
+                                     background=self._set_collage_background())
+        return image_collage.make_collage()
+
+
+leaves_of_grass = gutenberg.raw('whitman-leaves.txt')
+tchotchkesque = Tchotchkesque(leaves_of_grass, n_search_words=5)
+collage = tchotchkesque.create_collage()
+cv2.imwrite("final.jpg", collage)

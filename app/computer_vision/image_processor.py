@@ -8,12 +8,20 @@ from app.web_scraper.image_search import ImageSearch
 
 
 class ImageProcessor:
-    def __init__(self, search_key, download_dir_name='downloads'):
-        self.search_key = search_key
-        self.download_path = os.path.abspath(os.path.relpath(f'../../app/{download_dir_name}'))
+    def __init__(self,
+                 search_words: dict[int: str],
+                 download_path: str = 'downloads',
+                 running_list: List = None
+                 ):
+        self.download_path = download_path
+        self.search_words = search_words
         self.objects_found: List = []
-        self.image_searcher = ImageSearch(search_key, self.download_path)
-        self.image_searcher.download_google_images()
+        self.running_list = running_list
+
+    def gather_images_from_web(self):
+        for searchword in self.search_words.values():
+            image_searcher = ImageSearch(searchword, self.download_path)
+            image_searcher.download_google_images()
 
     def process_images_in_download_path(self):
         for image in os.listdir(self.download_path):
@@ -23,6 +31,9 @@ class ImageProcessor:
 
             for obj in edge_detector.objects_in_image:
                 self.objects_found.append(obj)
+                if self.running_list is not None:
+                    self.running_list.append(obj)
 
-    def clean_up(self):
-        self.image_searcher.cleanup_downloads()
+    def cleanup_downloads(self):
+        [os.remove(self.download_path+'/'+image)
+         for image in os.listdir(self.download_path)]

@@ -1,7 +1,7 @@
-## Add "Important words" to final collage:
-Adjust size & color based on:
-    - Frequency/Importance determines size
-    - Colors based on image search results
+#### Add "Important words" to final collage:
+Adjust size & color:
+- Frequency/Importance determines size
+- Colors sampled from image search results
 -------------------------------------------
 
 
