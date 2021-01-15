@@ -4,4 +4,12 @@ Adjust size & color:
 - Colors sampled from image search results
 -------------------------------------------
 
+#### Get the background searcher/loader working
 
+----------
+
+#### Clean up contouring logic to avoid psuedo duplicates
+
+-------
+
+####
