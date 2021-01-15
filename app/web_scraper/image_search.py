@@ -51,7 +51,10 @@ class ImageSearch:
         url = f'https://pexels.com/search/{self.keyword}/'
         page = requests.get(url).content
         soup = BeautifulSoup(page, 'html.parser')
+        tries = 3
         for raw_img in soup.find_all('img'):
+            if tries > 3:
+                return
             link = raw_img.get('src')
             if link.endswith('gif'):
                 continue
@@ -60,7 +63,6 @@ class ImageSearch:
             with open(f"{self.download_path}/background.jpg", 'wb') as f:
                 f.write(img_response.content)
                 f.close()
-            return
 
     def cleanup_downloads(self):
         [os.remove(self.download_path+'/'+image)

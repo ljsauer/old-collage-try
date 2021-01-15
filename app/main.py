@@ -17,25 +17,28 @@ class Tchotchkesque:
         self.significant_sents = SignificantSentences(text_body)
         self.significant_sents.rank_importance_of_words(word_count=n_search_words)
         self.tchotchkes = []
-        self.image_processor = ImageProcessor(self.significant_sents.important_words,
-                                              running_list=self.tchotchkes)
+        self.image_processor = ImageProcessor(self.significant_sents.important_words)
 
     def _set_collage_background(self):
         bg_keyword = self.significant_sents.important_words.get(1)
         image_searcher = ImageSearch(keyword=f'{bg_keyword} high resolution',
-                                     download_path='background.jpg')
+                                     download_path='/Users/sauerl/source/wwt/capstone/app/background')
         image_searcher.download_background_image()
         return cv2.imread(os.path.join(image_searcher.download_path, 'background.jpg'))
 
     def _gather_objects_for_collage(self):
-        self.image_processor.gather_images_from_web()
-        self.image_processor.process_images_in_download_path()
-        self.image_processor.cleanup_downloads()
+        for searchword in self.image_processor.search_words.values():
+            self.image_processor.gather_images_from_web(searchword)
+            self.image_processor.process_images_in_download_path()
+            self.tchotchkes += self.image_processor.objects_found
+            self.image_processor.cleanup_downloads()
 
     def create_collage(self) -> np.array:
         self._gather_objects_for_collage()
         image_collage = ImageCollage(objects=self.tchotchkes,
-                                     background=self._set_collage_background())
+                                     background_path=os.path.join(
+                                         '/Users/sauerl/source/wwt/capstone/app/background',
+                                         'background.jpg'))
         return image_collage.make_collage()
 
 
