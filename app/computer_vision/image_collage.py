@@ -12,7 +12,12 @@ import numpy as np
 class ImageCollage:
     def __init__(self, objects, background_path):
         self.objects: List[np.array] = objects
+
         self.background = cv2.imread(background_path)
+        b_channel, g_channel, r_channel = cv2.split(self.background)
+        alpha_channel = np.ones(b_channel.shape, dtype=b_channel.dtype) * 50
+        self.background = cv2.merge((b_channel, g_channel, r_channel, alpha_channel))
+
         self.used_area: List[List[tuple]] = []
 
     def make_collage(self):
@@ -37,7 +42,11 @@ class ImageCollage:
             #     i_y += 5
             # while i_x <= W:
             #     i_x += 5
-            self.background[i_y:i_y+H, i_x:i_x+W] = item
+            alpha_s = item[:, :, 3] / 255.0
+            alpha_l = 1.0 - alpha_s
+            for c in range(0, 3):
+                self.background[i_y:i_y+H, i_x:i_x+W, c] = (alpha_s * item[:, :, c] +
+                                          alpha_l * self.background[i_y:i_y+H, i_x:i_x+W, c])
             self.used_area.append([(i_x, i_y),
                                    (i_x+W, i_y),
                                    (i_x+W, i_y+H),

@@ -34,7 +34,7 @@ class ImageSearch:
             if link.endswith('gif'):
                 continue
             img_response = requests.get(link)
-            with open(f"{self.download_path}/temp-{count}.jpg", 'wb') as f:
+            with open(f"{self.download_path}/temp-{count}.png", 'wb') as f:
                 f.write(img_response.content)
                 f.close()
             count += 1
@@ -60,7 +60,7 @@ class ImageSearch:
                 continue
             print("link", link)
             img_response = requests.get(link)
-            with open(f"{self.download_path}/background.jpg", 'wb') as f:
+            with open(f"{self.download_path}/background.png", 'wb') as f:
                 f.write(img_response.content)
                 f.close()
 

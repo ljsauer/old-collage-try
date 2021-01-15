@@ -2,14 +2,14 @@ from typing import List
 
 from nltk import FreqDist
 from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords, gutenberg
 from string import punctuation
 
 
 class SignificantSentences:
 
     def __init__(self, text: str, n_sentences: int = 4):
-        self.text = text
+        self.text = gutenberg.raw(text)
         self.n_sentences: int = n_sentences
         self.important_words = dict()
 
@@ -19,7 +19,7 @@ class SignificantSentences:
 
         return [word for word in text_lower if word not in _stopwords]
 
-    def rank_importance_of_words(self, word_count: int = 10):
+    def rank_importance_of_words(self, word_count):
         word_frequency = FreqDist(self._remove_stopwords_from_text()).items()
 
         for i, (word, freq) in enumerate(word_frequency):

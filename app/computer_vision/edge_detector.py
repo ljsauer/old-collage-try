@@ -57,6 +57,11 @@ class EdgeDetector:
                 output_mask = np.where((mask == cv2.GC_BGD) | (mask == cv2.GC_PR_BGD), 0, 1)
                 output_mask = (output_mask * 255).astype('uint8')
                 obj_img = cv2.bitwise_and(image_copy, image_copy, mask=output_mask)
-                self.objects_in_image.append(obj_img)
+                tmp = cv2.cvtColor(obj_img, cv2.COLOR_BGR2GRAY)
+                _, alpha = cv2.threshold(tmp, 0, 255, cv2.THRESH_BINARY)
+                b, g, r = cv2.split(obj_img)
+                rgba = [b, g, r, alpha]
+                dst = cv2.merge(rgba, 4)
+                self.objects_in_image.append(dst)
             except cv2.error:
                 "Trouble reading image from path"

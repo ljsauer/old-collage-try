@@ -23,6 +23,8 @@ class ImageProcessor:
     def process_images_in_download_path(self):
         for image in os.listdir(self.download_path):
             image = cv2.imread(os.path.join(self.download_path, image))
+            cv2.imshow("img", image)
+            cv2.waitKey(0)
             edge_detector = EdgeDetector(image)
             edge_detector.draw_image_as_contours()
 
@@ -30,5 +32,5 @@ class ImageProcessor:
                 self.objects_found.append(obj)
 
     def cleanup_downloads(self):
-        [os.remove(self.download_path+'/'+image)
+        [os.remove(os.path.join(self.download_path, image))
          for image in os.listdir(self.download_path)]
