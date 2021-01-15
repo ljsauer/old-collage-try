@@ -35,6 +35,9 @@ class EdgeDetector:
 
         contours = cv2.findContours(img_edges.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         self.contours = imutils.grab_contours(contours)
+        for i, c in enumerate(self.contours):
+            if cv2.contourArea(c) < 20:
+                self.contours.pop(i)
 
     def _crop_object_from_image(self, bounding_rects):
         background = np.zeros((1, 65), dtype='float')

@@ -15,7 +15,7 @@ from app.web_scraper.image_search import ImageSearch
 class Tchotchkesque:
     def __init__(self, text_body, n_search_words=30):
         self.significant_sents = SignificantSentences(text_body)
-        self.significant_sents.rank_importance_of_words(word_count=n_search_words)
+        self.significant_sents.rank_importance_of_words(word_count=8)
         self.tchotchkes = []
         self.image_processor = ImageProcessor(self.significant_sents.important_words)
 
@@ -41,7 +41,7 @@ class Tchotchkesque:
         return image_collage.make_collage()
 
 
-leaves_of_grass = 'whitman-leaves.txt'
+leaves_of_grass = 'austen-emma.txt'
 tchotchkesque = Tchotchkesque(leaves_of_grass, n_search_words=5)
 collage = tchotchkesque.create_collage()
 cv2.imwrite("final.jpg", collage)

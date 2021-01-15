@@ -17,12 +17,13 @@ class SignificantSentences:
         text_lower = word_tokenize(self.text.lower())
         _stopwords = set(stopwords.words('english') + list(punctuation))
 
-        return [word for word in text_lower if word not in _stopwords]
+        return [word.strip("'-`") for word in text_lower if len(word) > 2 and word not in _stopwords]
 
     def rank_importance_of_words(self, word_count):
-        word_frequency = FreqDist(self._remove_stopwords_from_text()).items()
+        freq_dist = FreqDist(self._remove_stopwords_from_text()).items()
+        word_frequency = sorted(freq_dist, key=lambda x: x[1], reverse=True)
 
-        for i, (word, freq) in enumerate(word_frequency):
+        for i, (word, freq) in enumerate(word_frequency[1:]):
             if i > word_count:
                 return
             if freq <= 1:
