@@ -9,7 +9,8 @@ Adjust size & color:
 ----------
 
 #### Clean up contouring logic to avoid psuedo duplicates
+* Update: somewhat done, could be better
 
 -------
 
-####
+#### Improve contouring logic (e.g. thresholding) 
