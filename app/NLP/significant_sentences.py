@@ -9,7 +9,10 @@ from string import punctuation
 class SignificantSentences:
 
     def __init__(self, text: str, n_sentences: int = 4):
-        self.text = gutenberg.raw(text)
+        try:
+            self.text = gutenberg.raw(text)
+        except OSError:
+            self.text = text
         self.n_sentences: int = n_sentences
         self.important_words = dict()
 
@@ -19,11 +22,11 @@ class SignificantSentences:
 
         return [word.strip("'-`") for word in text_lower if len(word) > 2 and word not in _stopwords]
 
-    def rank_importance_of_words(self, word_count):
+    def rank_importance_of_words(self, word_count=50):
         freq_dist = FreqDist(self._remove_stopwords_from_text()).items()
         word_frequency = sorted(freq_dist, key=lambda x: x[1], reverse=True)
 
-        for i, (word, freq) in enumerate(word_frequency[1:]):
+        for i, (word, freq) in enumerate(word_frequency):
             if i > word_count:
                 return
             if freq <= 1:
@@ -48,8 +51,9 @@ class SignificantSentences:
         results_with_counts = self._count_important_words_in_sentence()
         result = [pair[1] for pair in results_with_counts]
         final_result = []
-        for sentence in result:
+        for i, sentence in enumerate(result):
+            if i > self.n_sentences:
+                return final_result
             if sentence not in final_result:
                 final_result.append(sentence)
-
-        return final_result[:self.n_sentences]
+        return final_result
