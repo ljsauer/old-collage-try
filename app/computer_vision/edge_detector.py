@@ -6,25 +6,22 @@ import numpy as np
 
 
 class EdgeDetector:
-    def __init__(self, image, min_object_size=.10):
+    def __init__(self, image, min_object_size=.30):
         self.image: np.array = image
-        self.contours: List = []
         self.min_size: float = min_object_size
-        self.objects_in_image: List[np.array] = []
+        self.obj_in_image: np.array = None
         self.contour_mask = np.ones(self.image.shape[:2], dtype='uint8') * 255
+        self.biggest_contour: np.array = None
 
     def draw_image_as_contours(self):
         self.draw_edges_of_objects()
-        contours_poly = [None] * len(self.contours)
-        bounding_rects = [None] * len(self.contours)
-        # centers = [None] * len(self.contours)   # optional enclosing circle params
-        # radius = [None] * len(self.contours)
-        cv2.drawContours(self.contour_mask, self.contours, -1, (200, 200, 55), -1)
-        for i, c in enumerate(self.contours):
-            contours_poly[i] = cv2.approxPolyDP(c, 3, True)
-            bounding_rects[i] = cv2.boundingRect(contours_poly[i])
-            # centers[i], radius[i] = cv2.minEnclosingCircle(contours_poly[i])
-        self._crop_object_from_image(bounding_rects)
+        cv2.drawContours(self.contour_mask, self.biggest_contour, -1, (200, 200, 55), -1)
+        try:
+            contours_poly = cv2.approxPolyDP(self.biggest_contour, 3, True)
+            bounding_rect = cv2.boundingRect(contours_poly)
+            self._crop_object_from_image(bounding_rect)
+        except cv2.error:
+            pass
 
     def draw_edges_of_objects(self):
         try:
@@ -34,37 +31,31 @@ class EdgeDetector:
             img_edges = cv2.Canny(self.image, 50, 100)
 
         contours = cv2.findContours(img_edges.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        self.contours = imutils.grab_contours(contours)
-        for i, c in enumerate(self.contours):
-            if cv2.contourArea(c) < 20:
-                self.contours.pop(i)
+        contours = imutils.grab_contours(contours)
+        if len(contours) > 0:
+            self.biggest_contour = max(contours, key=cv2.contourArea)
 
-    def _crop_object_from_image(self, bounding_rects):
+    def _crop_object_from_image(self, bounding_rect):
         background = np.zeros((1, 65), dtype='float')
         foreground = np.zeros((1, 65), dtype='float')
         _mask = np.zeros(self.image.shape[:2], dtype='uint8')
         image_copy = self.image.copy()
-        for rectangle in bounding_rects:
-            rectangle_area = rectangle[2] * rectangle[3]
-            target_size = self.min_size * self.image.shape[0] * self.image.shape[1]
-            if rectangle_area < target_size:
-                continue
-            try:
-                (mask, background, foreground) = cv2.grabCut(image_copy,
-                                                             self.contour_mask*0,
-                                                             rectangle,
-                                                             background,
-                                                             foreground,
-                                                             iterCount=1,
-                                                             mode=cv2.GC_INIT_WITH_RECT)
-                output_mask = np.where((mask == cv2.GC_BGD) | (mask == cv2.GC_PR_BGD), 0, 1)
-                output_mask = (output_mask * 255).astype('uint8')
-                obj_img = cv2.bitwise_and(image_copy, image_copy, mask=output_mask)
-                tmp = cv2.cvtColor(obj_img, cv2.COLOR_BGR2GRAY)
-                _, alpha = cv2.threshold(tmp, 0, 255, cv2.THRESH_BINARY)
-                b, g, r = cv2.split(obj_img)
-                rgba = [b, g, r, alpha]
-                dst = cv2.merge(rgba, 4)
-                self.objects_in_image.append(dst)
-            except cv2.error:
-                "Trouble reading image from path"
+        try:
+            (mask, background, foreground) = cv2.grabCut(image_copy,
+                                                         self.contour_mask*0,
+                                                         bounding_rect,
+                                                         background,
+                                                         foreground,
+                                                         iterCount=1,
+                                                         mode=cv2.GC_INIT_WITH_RECT)
+            output_mask = np.where((mask == cv2.GC_BGD) | (mask == cv2.GC_PR_BGD), 0, 1)
+            output_mask = (output_mask * 255).astype('uint8')
+            obj_img = cv2.bitwise_and(image_copy, image_copy, mask=output_mask)
+            tmp = cv2.cvtColor(obj_img, cv2.COLOR_BGR2GRAY)
+            _, alpha = cv2.threshold(tmp, 0, 255, cv2.THRESH_BINARY)
+            b, g, r = cv2.split(obj_img)
+            rgba = [b, g, r, alpha]
+            dst = cv2.merge(rgba, 4)
+            self.obj_in_image = dst
+        except cv2.error:
+            "Trouble reading image from path"

@@ -4,13 +4,12 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
-from tqdm import tqdm
 
 
 class ImageSearch:
     def __init__(self, keyword: str,
                  download_path: str,
-                 max_images: int = 5
+                 max_images: int
                  ):
         self.keyword = keyword.replace(' ', '+')
         self.download_path = download_path
