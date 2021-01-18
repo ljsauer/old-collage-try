@@ -20,7 +20,8 @@ class SignificantSentences:
         text_lower = word_tokenize(self.text.lower())
         _stopwords = set(stopwords.words('english') + list(punctuation))
 
-        return [word.strip("'-`") for word in text_lower if len(word) > 2 and word not in _stopwords]
+        return [word.strip("'-`") for word in text_lower
+                if len(word) > 2 and word not in _stopwords]
 
     def rank_importance_of_words(self, word_count=50):
         freq_dist = FreqDist(self._remove_stopwords_from_text()).items()
