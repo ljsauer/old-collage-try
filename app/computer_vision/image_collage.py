@@ -10,10 +10,10 @@ import numpy as np
 # TODO: Improve logic to avoid too much overlap in objects
 
 class ImageCollage:
-    def __init__(self, objects, background_path):
+    def __init__(self, objects, background_img):
         self.objects: List[np.array] = objects
 
-        self.background = cv2.imread(background_path)
+        self.background = background_img
         b_channel, g_channel, r_channel = cv2.split(self.background)
         alpha_channel = np.ones(b_channel.shape, dtype=b_channel.dtype) * 50
         self.background = cv2.merge((b_channel, g_channel, r_channel, alpha_channel))

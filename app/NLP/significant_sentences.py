@@ -28,7 +28,7 @@ class SignificantSentences:
         word_frequency = sorted(freq_dist, key=lambda x: x[1], reverse=True)
 
         for i, (word, freq) in enumerate(word_frequency):
-            if i > word_count:
+            if i >= word_count:
                 return
             if freq <= 1:
                 continue

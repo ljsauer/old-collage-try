@@ -9,7 +9,7 @@ from app.computer_vision.image_processor import ImageProcessor
 class TestImageProcessor(unittest.TestCase):
     def setUp(self) -> None:
         self.ip = ImageProcessor({1: "world wide web"})
-        self.ip.gather_images_from_web()
+        self.ip.gather_images_from_web(self.ip.search_words.get(1))
 
     def test_processes_images(self):
         self.ip.process_images_in_download_path()

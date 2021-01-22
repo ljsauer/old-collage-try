@@ -9,6 +9,7 @@ google-images-download = "*"
 pillow = "*"
 imutils = "*"
 shapely = "*"
+wordcloud = "*"
 
 [dev-packages]
 

@@ -1,8 +1,6 @@
 import os
-from typing import List
 
 import cv2
-import numpy as np
 
 from app.computer_vision.edge_detector import EdgeDetector
 from app.web_scraper.image_search import ImageSearch
@@ -15,8 +13,10 @@ class ImageProcessor:
                  download_path: str = 'downloads'
                  ):
         self.search_words = search_words
+        self.first_image = True
+        self.bg_color = []
         self.max_images = max_images
-        self.object_found: np.array = None
+        self.objects_found = []
         self.download_path = download_path
 
     def gather_images_from_web(self, searchword):
@@ -26,13 +26,19 @@ class ImageProcessor:
     def process_images_in_download_path(self):
         for image in os.listdir(self.download_path):
             image = cv2.imread(os.path.join(self.download_path, image))
+
             edge_detector = EdgeDetector(image)
             edge_detector.draw_image_as_contours()
 
             obj = edge_detector.obj_in_image
             if obj is not None:
-                obj = cv2.resize(obj, (obj.shape[1]*4, obj.shape[0]*4), cv2.INTER_NEAREST)
-                self.object_found = obj
+                if self.first_image:
+                    tri_chan = cv2.merge(cv2.split(obj)[:3])
+                    self.bg_color = tri_chan.mean(axis=0).mean(axis=0)
+                    if sum(self.bg_color) > 0:
+                        self.first_image = False
+                obj = cv2.resize(obj, (obj.shape[1]*2, obj.shape[0]*2), cv2.INTER_NEAREST)
+                self.objects_found.append(obj)
 
     def cleanup_downloads(self):
         [os.remove(os.path.join(self.download_path, image))
