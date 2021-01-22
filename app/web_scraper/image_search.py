@@ -39,10 +39,7 @@ class ImageSearch:
             count += 1
 
     @staticmethod
-    def is_valid(url):
-        """
-        Checks whether `url` is a valid URL.
-        """
+    def is_valid(url: str):
         parsed = urlparse(url)
         return bool(parsed.netloc) and bool(parsed.scheme)
 

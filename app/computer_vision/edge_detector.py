@@ -6,11 +6,11 @@ import numpy as np
 
 
 class EdgeDetector:
-    def __init__(self, image, min_object_size=.30):
-        self.image: np.array = image
-        self.min_size: float = min_object_size
+    def __init__(self, image: np.array, min_object_size: float = .30):
+        self.image = image
+        self.min_size = min_object_size
         self.obj_in_image: np.array = None
-        self.contour_mask = np.ones(self.image.shape[:2], dtype='uint8') * 255
+        self.contour_mask: np.array = np.ones(self.image.shape[:2], dtype='uint8') * 255
         self.biggest_contour: np.array = None
 
     def draw_image_as_contours(self):
@@ -35,7 +35,7 @@ class EdgeDetector:
         if len(contours) > 0:
             self.biggest_contour = max(contours, key=cv2.contourArea)
 
-    def _crop_object_from_image(self, bounding_rect):
+    def _crop_object_from_image(self, bounding_rect: List[int]):
         background = np.zeros((1, 65), dtype='float')
         foreground = np.zeros((1, 65), dtype='float')
         _mask = np.zeros(self.image.shape[:2], dtype='uint8')

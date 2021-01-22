@@ -7,12 +7,12 @@ class VaderSentimentAnalyzer:
     """
     sia = SentimentIntensityAnalyzer()
 
-    def __init__(self, text_body):
+    def __init__(self, text_body: str):
         self.text_body = text_body
 
     @staticmethod
-    def analyze_sentence(sentence: str, sentiment_analyzer=sia) -> dict:
+    def analyze_sentence(sentence: str, sentiment_analyzer: SentimentIntensityAnalyzer = sia) -> dict:
         return sentiment_analyzer.polarity_scores(sentence)
 
-    def analyze_whole_text(self, sentiment_analyzer=sia) -> dict:
+    def analyze_whole_text(self, sentiment_analyzer: SentimentIntensityAnalyzer = sia) -> dict:
         return sentiment_analyzer.polarity_scores(self.text_body)

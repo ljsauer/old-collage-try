@@ -17,7 +17,7 @@ class TestImageCollage(unittest.TestCase):
             cv2.circle(blank_img.copy(), (36, 36), 15, (0, 0, 255), -1),
             cv2.rectangle(blank_img.copy(), (10, 10), (65, 65), (0, 255, 0), 2),
             cv2.rectangle(blank_img.copy(), (10, 10), (65, 65), (0, 255, 255), 2),
-        ]
+            ]
         for i, obj_img in enumerate(self.objects):
             tmp = cv2.cvtColor(obj_img, cv2.COLOR_BGR2GRAY)
             _, alpha = cv2.threshold(tmp, 0, 255, cv2.THRESH_BINARY)
@@ -27,7 +27,7 @@ class TestImageCollage(unittest.TestCase):
             self.objects[i] = dst
 
     def test_creates_collage(self):
-        ic = ImageCollage(objects=self.objects, background_path=self.background)
+        ic = ImageCollage(objects=self.objects, background_img=np.ones((600, 600, 3), dtype='uint8'))
         collage = ic.make_collage()
         cv2.imshow("collage", collage)
         cv2.waitKey(0)

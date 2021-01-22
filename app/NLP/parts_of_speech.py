@@ -39,5 +39,4 @@ class PartsOfSpeech:
         verbs = [w[0] for w in pos_tags if w[1] in verb_tags]
         return [v.strip(r'\\') for v in verbs]
 
-
 # TODO: Create Gutenberg class to super init from PartsOfSpeech

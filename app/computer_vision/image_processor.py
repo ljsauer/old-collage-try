@@ -19,7 +19,7 @@ class ImageProcessor:
         self.objects_found = []
         self.download_path = download_path
 
-    def gather_images_from_web(self, searchword):
+    def gather_images_from_web(self, searchword: str):
         image_searcher = ImageSearch(searchword, self.download_path, self.max_images)
         image_searcher.download_google_images()
 

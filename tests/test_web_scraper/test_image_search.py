@@ -8,7 +8,7 @@ class TestImageSearch(unittest.TestCase):
     def setUp(self) -> None:
         self.keyword = "coffee+mug"
         self.max_images = 4
-        download_path = os.path.join(os.path.abspath(''), 'app/downloads')
+        download_path = os.path.join(os.path.abspath(''), '../../app/downloads')
         self.img_search = ImageSearch(
             self.keyword,
             download_path,

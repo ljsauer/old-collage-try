@@ -13,7 +13,7 @@ class SignificantSentences:
             self.text = gutenberg.raw(text)
         except OSError:
             self.text = text
-        self.n_sentences: int = n_sentences
+        self.n_sentences = n_sentences
         self.important_words = dict()
 
     def _remove_stopwords_from_text(self) -> List[str]:
@@ -23,7 +23,7 @@ class SignificantSentences:
         return [word.strip("'-`") for word in text_lower
                 if len(word) > 2 and word not in _stopwords]
 
-    def rank_importance_of_words(self, word_count=50):
+    def rank_importance_of_words(self, word_count: int = 50) -> None:
         freq_dist = FreqDist(self._remove_stopwords_from_text()).items()
         word_frequency = sorted(freq_dist, key=lambda x: x[1], reverse=True)
 
