@@ -1,7 +1,8 @@
-nltk
-requests
-bs4
 numpy
 opencv-python
+opencv-python-contrib
+google-images-download
+pillow
 imutils
 shapely
+wordcloud
