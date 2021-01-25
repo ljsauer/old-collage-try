@@ -17,6 +17,7 @@ class Tchotchkesque:
 
     def _set_collage_background(self) -> np.array:
         wc = WordcloudBackground(text=self.raw_text,
+                                 mask=self.image_processor.first_image,
                                  max_font_size=100,
                                  max_words=250,
                                  bg_color=tuple([int(c) for c in self.image_processor.bg_color]))

@@ -5,6 +5,7 @@ from wordcloud import WordCloud
 
 class WordcloudBackground:
     def __init__(self, text: str,
+                 mask: np.array = None,
                  max_font_size: int = 50,
                  max_words: int = 100,
                  bg_color: tuple[int] = None,
@@ -15,6 +16,7 @@ class WordcloudBackground:
             bg_color = ([0, 0, 0])
 
         wordcloud = WordCloud(max_font_size=max_font_size,
+                              mask=mask,
                               max_words=max_words,
                               background_color=bg_color,
                               width=width,

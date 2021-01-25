@@ -29,3 +29,11 @@ class TestWordCloud(unittest.TestCase):
         wc_bgr = cv2.cvtColor(wc.wordcloud, cv2.COLOR_RGB2BGR)
         cv2.imshow("Word Cloud", wc_bgr)
         cv2.waitKey(0)
+
+    def test_use_mask_to_shape_words(self):
+        mask = cv2.imread('tests/test_computer_vision/bird.png')
+        wc = WordcloudBackground(self.text, mask=mask, bg_color=tuple([50, 70, 90]), width=720)
+        wc_bgr = cv2.cvtColor(wc.wordcloud, cv2.COLOR_RGB2BGR)
+        cv2.imshow("Word Cloud", wc_bgr)
+        cv2.waitKey(0)
+
