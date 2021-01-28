@@ -6,8 +6,10 @@ from shapely.geometry import Polygon, Point
 
 import numpy as np
 
+# TODO: Place objects around wordcloud circle in center of background
 
 # TODO: Improve logic to avoid too much overlap in objects
+
 
 class ImageCollage:
     def __init__(self, objects: List[np.array], background_img: np.array):
