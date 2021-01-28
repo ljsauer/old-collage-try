@@ -22,7 +22,7 @@ class ImageCollage:
         self.background = cv2.merge((b_channel, g_channel, r_channel, alpha_channel))
 
     def make_collage(self):
-        # TODO: Rename variables to make them make sense and refactor into smaller pieces
+        # TODO: Rename variables to make them make sense and extract method
         background_size = self.background.shape[:2]
 
         for item in self.objects:
@@ -46,8 +46,9 @@ class ImageCollage:
             alpha_s = item[:, :, 3] / 255.0
             alpha_l = 1.0 - alpha_s
             for c in range(0, 3):
-                self.background[i_y:i_y+H, i_x:i_x+W, c] = (alpha_s * item[:, :, c] +
-                                          alpha_l * self.background[i_y:i_y+H, i_x:i_x+W, c])
+                self.background[i_y:i_y+H, i_x:i_x+W, c] = (
+                        alpha_s * item[:, :, c] +
+                        alpha_l * self.background[i_y:i_y+H, i_x:i_x+W, c])
             self.used_area.append([(i_x, i_y),
                                    (i_x+W, i_y),
                                    (i_x+W, i_y+H),
