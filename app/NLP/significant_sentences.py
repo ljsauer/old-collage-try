@@ -2,17 +2,14 @@ from typing import List
 
 from nltk import FreqDist
 from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.corpus import stopwords, gutenberg
+from nltk.corpus import stopwords
 from string import punctuation
 
 
 class SignificantSentences:
 
     def __init__(self, text: str, n_sentences: int = 4):
-        try:
-            self.text = gutenberg.raw(text)
-        except OSError:
-            self.text = text
+        self.text = text
         self.n_sentences = n_sentences
         self.important_words = dict()
 
