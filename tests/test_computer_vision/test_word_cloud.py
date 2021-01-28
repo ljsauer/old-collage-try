@@ -26,6 +26,7 @@ class TestWordCloud(unittest.TestCase):
 
     def test_creates_wordcloud_background(self):
         wc = WordcloudBackground(self.text, bg_color=tuple([0, 0, 0]), width=720)
-        wc_bgr = cv2.cvtColor(wc.wordcloud, cv2.COLOR_RGB2BGR)
+        wc.create_wordcloud()
+        wc_bgr = cv2.cvtColor(wc.create_wordcloud(), cv2.COLOR_RGB2BGR)
         cv2.imshow("Word Cloud", wc_bgr)
         cv2.waitKey(0)

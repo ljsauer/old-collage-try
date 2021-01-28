@@ -1,4 +1,5 @@
 import os
+from random import randint
 
 import cv2
 
@@ -14,7 +15,7 @@ class ImageProcessor:
                  ):
         self.search_words = search_words
         self.first_image = True
-        self.bg_color = []
+        self.bg_color = (randint(0, 255), randint(0, 255), randint(0, 255))
         self.max_images = max_images
         self.objects_found = []
         self.download_path = download_path
@@ -32,11 +33,6 @@ class ImageProcessor:
 
             obj = edge_detector.obj_in_image
             if obj is not None:
-                if self.first_image:
-                    tri_chan = cv2.merge(cv2.split(obj)[:3])
-                    self.bg_color = tri_chan.mean(axis=0).mean(axis=0)
-                    if sum(self.bg_color) > 0:
-                        self.first_image = False
                 obj = cv2.resize(obj, (obj.shape[1]*2, obj.shape[0]*2), cv2.INTER_NEAREST)
                 self.objects_found.append(obj)
 

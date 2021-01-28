@@ -9,7 +9,7 @@ from app.computer_vision.image_processor import ImageProcessor
 
 
 class Tchotchkesque:
-    def __init__(self, text: str, num_words: int = 30, img_per_word: int = 3):
+    def __init__(self, text: str, num_words: int = 30, img_per_word: int = 5):
         self.num_words = num_words
         self.sig_sentences = SignificantSentences(text)
         self.sig_sentences.rank_importance_of_words(word_count=num_words)
@@ -19,7 +19,7 @@ class Tchotchkesque:
         wc = WordcloudBackground(text=self.sig_sentences.text,
                                  max_font_size=100,
                                  max_words=250,
-                                 bg_color=tuple([int(c) for c in self.image_processor.bg_color])
+                                 bg_color=self.image_processor.bg_color
                                  )
 
         return wc.create_wordcloud()
