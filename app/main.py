@@ -1,46 +1,36 @@
 import cv2
-import numpy as np
+from flask import Flask, render_template, url_for
+from werkzeug.utils import redirect
 
 from app.NLP.book_loader import BookLoader
-from app.NLP.significant_sentences import SignificantSentences
-from app.computer_vision.create_wordcloud import WordcloudBackground
-from app.computer_vision.image_collage import ImageCollage
-from app.computer_vision.image_processor import ImageProcessor
+from app.computer_vision.image_collage import CollageGenerator
 
 
-class Tchotchkesque:
-    def __init__(self, text: str, num_words: int = 30, img_per_word: int = 5):
-        self.num_words = num_words
-        self.sig_sentences = SignificantSentences(text)
-        self.sig_sentences.rank_importance_of_words(word_count=num_words)
-        self.image_processor = ImageProcessor(self.sig_sentences.important_words, img_per_word)
-
-    def _generate_background_image(self) -> np.array:
-        wc = WordcloudBackground(text=self.sig_sentences.text,
-                                 max_font_size=100,
-                                 max_words=250,
-                                 bg_color=self.image_processor.bg_color
-                                 )
-
-        return wc.create_wordcloud()
-
-    def _gather_objects_for_collage(self) -> None:
-        for i, searchword in enumerate(self.image_processor.search_words.values()):
-            print(i, searchword)
-
-            self.image_processor.gather_images_from_web(searchword)
-            self.image_processor.process_images_in_download_path()
-            self.image_processor.cleanup_downloads()
-
-    def create_collage(self) -> np.array:
-        self._gather_objects_for_collage()
-        image_collage = ImageCollage(objects=self.image_processor.objects_found,
-                                     background_img=self._generate_background_image())
-        return image_collage.make_collage()
+app = Flask(__name__, template_folder='../templates', static_folder='../static')
 
 
-book_loader = BookLoader()
-raw_text = book_loader.load('whitman-leaves.txt')
-tchotchkesque = Tchotchkesque(raw_text, num_words=10)
-collage = tchotchkesque.create_collage()
-cv2.imwrite("final.jpg", collage)
+@app.route('/collage/', methods=['GET', 'POST'])
+def show_image():
+    return redirect(url_for('static', filename='image_collage.jpg'), code=301)
+
+
+@app.route('/load/<text>/')
+def book_loader(text):
+    with open('static/book.txt', 'w') as f:
+        f.write(BookLoader().load(text.strip('-')))
+        f.close()
+    return
+
+
+@app.route('/generate/')
+def collage_generator():
+    with open('static/book.txt', 'r') as f:
+        text = f.read().replace('-', ' ')
+        collage = CollageGenerator(text, num_words=10).create_collage()
+        f.close()
+    cv2.imwrite("static/image_collage.jpg", collage)
+    return render_template("image.html", image_collage='static/image_collage.jpg')
+
+
+if __name__ == '__main__':
+    app.run(host="127.0.0.1", port=8080, debug=True)

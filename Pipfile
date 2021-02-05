@@ -10,6 +10,7 @@ pillow = "*"
 imutils = "*"
 shapely = "*"
 wordcloud = "*"
+flask = "*"
 
 [dev-packages]
 
