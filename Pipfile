@@ -11,6 +11,7 @@ imutils = "*"
 shapely = "*"
 wordcloud = "*"
 flask = "*"
+loguru = "*"
 
 [dev-packages]
 

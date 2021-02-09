@@ -2,6 +2,7 @@ from random import randint
 from typing import List
 
 import cv2
+from loguru import logger
 from shapely.geometry import Polygon, Point
 
 import numpy as np
@@ -33,7 +34,7 @@ class CollageGenerator:
 
     def _gather_objects_for_collage(self) -> None:
         for i, searchword in enumerate(self.image_processor.search_words.values()):
-            print(i, searchword)
+            logger.log(i, searchword)
 
             self.image_processor.gather_images_from_web(searchword)
             self.image_processor.process_images_in_download_path()
