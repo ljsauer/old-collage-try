@@ -2,7 +2,6 @@ from random import randint
 from typing import List
 
 import cv2
-from loguru import logger
 from shapely.geometry import Polygon, Point
 
 import numpy as np
@@ -24,9 +23,8 @@ class CollageGenerator:
         self.image_processor = ImageProcessor(self.sig_sentences.important_words, img_per_word)
 
     def _generate_background_image(self) -> np.array:
-        wc = WordcloudBackground(text=self.sig_sentences.text,
-                                 max_font_size=100,
-                                 max_words=250,
+        wc = WordcloudBackground(text=str(list(self.sig_sentences.important_words.values())).replace("'", ""),
+                                 max_font_size=300,
                                  bg_color=self.image_processor.bg_color
                                  )
 
@@ -34,8 +32,6 @@ class CollageGenerator:
 
     def _gather_objects_for_collage(self) -> None:
         for i, searchword in enumerate(self.image_processor.search_words.values()):
-            logger.log(i, searchword)
-
             self.image_processor.gather_images_from_web(searchword)
             self.image_processor.process_images_in_download_path()
             self.image_processor.cleanup_downloads()
@@ -62,32 +58,28 @@ class ImageCollage:
         background_size = self.background.shape[:2]
 
         for item in self.objects:
-            i_y, i_x = (randint(0, background_size[0]), randint(0, background_size[1]))
+            y, x = (randint(0, background_size[0]), randint(0, background_size[1]))
             H, W = item.shape[:2]
 
-            combos = [Polygon(area) for area in self.used_area]
-            while any([Polygon(poly).contains(Point(i_x, i_y)) for poly in combos]):
-                i_y, i_x = (
-                    randint(0, background_size[0]),
-                    randint(0, background_size[1])
-                )
-            while i_y + H >= background_size[0]:
-                i_y -= 5
-            while i_x + W >= background_size[1]:
-                i_x -= 5
-            # while i_y <= H:
-            #     i_y += 5
-            # while i_x <= W:
-            #     i_x += 5
+            polygons = [Polygon(area) for area in self.used_area]
+            while any([Polygon(poly).contains(Point(x, y)) for poly in polygons]):
+                y, x = (randint(0, background_size[0]),
+                        randint(0, background_size[1])
+                        )
+            while y + H >= background_size[0]:
+                y -= 5
+            while x + W >= background_size[1]:
+                x -= 5
+
             alpha_s = item[:, :, 3] / 255.0
             alpha_l = 1.0 - alpha_s
             for c in range(0, 3):
-                self.background[i_y:i_y+H, i_x:i_x+W, c] = (
+                self.background[y:y+H, x:x+W, c] = (
                         alpha_s * item[:, :, c] +
-                        alpha_l * self.background[i_y:i_y+H, i_x:i_x+W, c])
-            self.used_area.append([(i_x, i_y),
-                                   (i_x+W, i_y),
-                                   (i_x+W, i_y+H),
-                                   (i_x, i_y+H)])
+                        alpha_l * self.background[y:y+H, x:x+W, c])
+            self.used_area.append([(x, y),
+                                   (x+W, y),
+                                   (x+W, y+H),
+                                   (x, y+H)])
 
         return self.background

@@ -1,8 +1,7 @@
 import cv2
 from flask import Flask, render_template, url_for, request
-from werkzeug.utils import redirect, secure_filename
+from werkzeug.utils import redirect
 
-from app.NLP.book_loader import BookLoader
 from app.computer_vision.image_collage import CollageGenerator
 
 
@@ -13,19 +12,14 @@ class UploadError(object):
     pass
 
 
-@app.route('/')
-def hello():
-    return upload_file()
+@app.route('/index')
+def start():
+    return render_template('index.html')
 
 
 @app.route('/collage', methods=['GET', 'POST'])
 def show_image():
     return redirect(url_for('static', filename='image_collage.jpg'), code=301)
-
-
-@app.route('/upload')
-def upload_file():
-    return render_template('upload.html')
 
 
 @app.route('/uploader', methods=['GET', 'POST'])
@@ -47,3 +41,4 @@ def collage_generator(text):
 
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=8080, debug=True)
+    start()

@@ -19,7 +19,8 @@ class WordcloudBackground:
         self.width = width,
         self.height = height,
         self.mask = mask
-        self._create_mask()
+        if self.mask is None:
+            self._create_mask()
 
         self.wordcloud = WordCloud(max_font_size=max_font_size,
                                    max_words=max_words,

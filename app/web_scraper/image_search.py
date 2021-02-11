@@ -1,6 +1,5 @@
 import os
-import urllib.request as url_req
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -11,7 +10,7 @@ class ImageSearch:
                  download_path: str,
                  max_images: int
                  ):
-        self.keyword = keyword.replace(' ', '+')
+        self.keyword = keyword
         self.download_path = download_path
         self.max_images = max_images
 
@@ -19,9 +18,9 @@ class ImageSearch:
             os.mkdir(self.download_path)
 
     def download_google_images(self):
-        url = f'https://www.google.com/search?q={self.keyword}%20'\
-              '&tbm=isch&hl=en&tbs=itp:lineart&sa=X&ved='\
-              '0CAEQpwVqFwoTCKCt4pTPve4CFQAAAAAdAAAAABAC&biw=1344&bih=916'
+        url = f'https://www.google.com/search?as_st=y&tbm=isch&hl=en' \
+              f'&as_q={self.keyword}&as_epq=&as_oq=&as_eq=&cr=' \
+              f'&as_sitesearch=&safe=active&tbs=itp:lineart'
 
         page = requests.get(url).text
         soup = BeautifulSoup(page, 'html.parser')
