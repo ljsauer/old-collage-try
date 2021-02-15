@@ -22,8 +22,8 @@ def show_image():
     return redirect(url_for('static', filename='image_collage.jpg'), code=301)
 
 
-@app.route('/uploader', methods=['GET', 'POST'])
-def uploader():
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
     if request.method == 'POST':
         f = request.files['file']
         text = str(f.read())

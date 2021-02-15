@@ -17,4 +17,3 @@ class TestPlaceObjects(unittest.TestCase):
 
         cv2.imshow("grid", np.array(po.grid))
         cv2.waitKey(0)
-

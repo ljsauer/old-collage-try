@@ -15,9 +15,9 @@ class ImageSearch:
             os.mkdir(self.download_path)
 
     def download_google_images(self):
-        url = f'https://www.google.com/search?as_st=y&tbm=isch&hl=en' \
-              f'&as_q={self.keyword}&as_epq=&as_oq=&as_eq=&cr=' \
-              f'&as_sitesearch=&safe=active'
+        url = f'https://www.google.com/search?q={self.keyword}&tbm=isch&hl=en&safe=active' \
+              f'&tbs=itp:lineart%2Cisz:l&client=firefox-b-1-d&sa=X' \
+              f'&ved=0CAIQpwVqFwoTCIiQ6KKW7O4CFQAAAAAdAAAAABAC&biw=1032&bih=1707'
 
         page = requests.get(url).text
         soup = BeautifulSoup(page, 'html.parser')
