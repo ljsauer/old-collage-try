@@ -6,10 +6,7 @@ from bs4 import BeautifulSoup
 
 
 class ImageSearch:
-    def __init__(self, keyword: str,
-                 download_path: str,
-                 max_images: int
-                 ):
+    def __init__(self, keyword: str, download_path: str, max_images: int):
         self.keyword = keyword
         self.download_path = download_path
         self.max_images = max_images
@@ -20,7 +17,7 @@ class ImageSearch:
     def download_google_images(self):
         url = f'https://www.google.com/search?as_st=y&tbm=isch&hl=en' \
               f'&as_q={self.keyword}&as_epq=&as_oq=&as_eq=&cr=' \
-              f'&as_sitesearch=&safe=active&tbs=itp:lineart'
+              f'&as_sitesearch=&safe=active'
 
         page = requests.get(url).text
         soup = BeautifulSoup(page, 'html.parser')

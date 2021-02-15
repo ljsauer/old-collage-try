@@ -30,6 +30,7 @@ class WordcloudBackground:
                                    mask=self.mask).generate(text)
 
     def _create_mask(self):
+        # Creates a circular mask to shape the word cloud
         if self.bg_color is None:
             self.bg_color = ([0, 0, 0])
         if self.mask is None:
