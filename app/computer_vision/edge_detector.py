@@ -26,9 +26,9 @@ class EdgeDetector:
     def draw_edges_of_objects(self):
         try:
             img_gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-            img_edges = cv2.Canny(img_gray, 50, 100)
+            img_edges = cv2.Canny(img_gray, 100, 255)
         except cv2.error:
-            img_edges = cv2.Canny(self.image, 50, 100)
+            img_edges = cv2.Canny(self.image, 100, 255)
 
         contours = cv2.findContours(img_edges.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         contours = imutils.grab_contours(contours)
@@ -59,3 +59,4 @@ class EdgeDetector:
             self.obj_in_image = dst
         except cv2.error:
             "Trouble reading image from path"
+            pass

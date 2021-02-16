@@ -1,18 +1,15 @@
-from random import randint
 from typing import List
 
 import cv2
-from shapely.geometry import Polygon, Point
-
 import numpy as np
 
 from app.NLP.significant_sentences import SignificantSentences
 from app.computer_vision.create_wordcloud import WordcloudBackground
 from app.computer_vision.image_processor import ImageProcessor
 
-# TODO: Place objects around wordcloud circle in center of background
+from app.computer_vision.random_placement import RandomPlacement
 
-# TODO: Improve object-placing logic to avoid overlap in objects
+# TODO: Place objects around wordcloud circle in center of background
 
 
 class CollageGenerator:
@@ -42,43 +39,18 @@ class CollageGenerator:
                                      background_img=self._generate_background_image())
         return image_collage.make_collage()
 
+# TODO: Refactor redundant class
+
 
 class ImageCollage:
     def __init__(self, objects: List[np.array], background_img: np.array):
         self.objects = objects
-        self.used_area: List[List[tuple]] = []
 
-        background = background_img
-        b_channel, g_channel, r_channel = cv2.split(background)
+        b_channel, g_channel, r_channel = cv2.split(background_img)
         alpha_channel = np.ones(b_channel.shape, dtype=b_channel.dtype) * 50
         self.background = cv2.merge((b_channel, g_channel, r_channel, alpha_channel))
 
     def make_collage(self):
-        background_size = self.background.shape[:2]
-
-        for item in self.objects:
-            y, x = (randint(0, background_size[0]), randint(0, background_size[1]))
-            H, W = item.shape[:2]
-
-            polygons = [Polygon(area) for area in self.used_area]
-            while any([Polygon(poly).contains(Point(x, y)) for poly in polygons]):
-                y, x = (randint(0, background_size[0]),
-                        randint(0, background_size[1])
-                        )
-            while y + H >= background_size[0]:
-                y -= 5
-            while x + W >= background_size[1]:
-                x -= 5
-
-            alpha_s = item[:, :, 3] / 255.0
-            alpha_l = 1.0 - alpha_s
-            for c in range(0, 3):
-                self.background[y:y+H, x:x+W, c] = (
-                        alpha_s * item[:, :, c] +
-                        alpha_l * self.background[y:y+H, x:x+W, c])
-            self.used_area.append([(x, y),
-                                   (x+W, y),
-                                   (x+W, y+H),
-                                   (x, y+H)])
+        RandomPlacement(self.background, self.objects).draw_objects()
 
         return self.background

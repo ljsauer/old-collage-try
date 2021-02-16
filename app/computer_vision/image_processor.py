@@ -33,7 +33,7 @@ class ImageProcessor:
 
             obj = edge_detector.obj_in_image
             if obj is not None:
-                obj = cv2.resize(obj, (obj.shape[1]*2, obj.shape[0]*2), cv2.INTER_NEAREST)
+                # obj = cv2.resize(obj, (obj.shape[1]*2, obj.shape[0]*2), cv2.INTER_NEAREST)
                 self.objects_found.append(obj)
 
     def cleanup_downloads(self):

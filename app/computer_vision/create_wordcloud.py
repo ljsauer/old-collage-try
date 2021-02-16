@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 from wordcloud import WordCloud
 
+# TODO: Create mask from randomly placed images, THEN create wordcloud
+
 
 class WordcloudBackground:
     def __init__(self,

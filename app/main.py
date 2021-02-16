@@ -4,6 +4,7 @@ from werkzeug.utils import redirect
 
 from app.computer_vision.image_collage import CollageGenerator
 
+# TODO: bootstrap loading screen
 
 app = Flask(__name__, template_folder='../templates', static_folder='../static')
 
