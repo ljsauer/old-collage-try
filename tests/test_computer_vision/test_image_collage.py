@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from app.computer_vision.image_collage import ImageCollage
+from app.computer_vision.place_objects import PlaceObjects
 
 
 class TestImageCollage(unittest.TestCase):
@@ -17,7 +18,8 @@ class TestImageCollage(unittest.TestCase):
             cv2.circle(blank_img.copy(), (36, 36), 15, (0, 0, 255), -1),
             cv2.rectangle(blank_img.copy(), (10, 10), (65, 65), (0, 255, 0), 2),
             cv2.rectangle(blank_img.copy(), (10, 10), (65, 65), (0, 255, 255), 2),
-            ]
+            ] * 3
+
         for i, obj_img in enumerate(self.objects):
             tmp = cv2.cvtColor(obj_img, cv2.COLOR_BGR2GRAY)
             _, alpha = cv2.threshold(tmp, 0, 255, cv2.THRESH_BINARY)
