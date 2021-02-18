@@ -50,7 +50,7 @@ class ImageCollage:
         alpha_channel = np.ones(b_channel.shape, dtype=b_channel.dtype) * 50
         self.background = cv2.merge((b_channel, g_channel, r_channel, alpha_channel))
 
-    def make_collage(self):
+    def make_collage(self) -> np.array:
         RandomPlacement(self.background, self.objects).draw_objects()
 
         return self.background
