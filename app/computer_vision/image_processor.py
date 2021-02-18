@@ -1,5 +1,6 @@
 import os
 from random import randint
+from typing import List
 
 import cv2
 
@@ -9,7 +10,7 @@ from app.web_scraper.image_search import ImageSearch
 
 class ImageProcessor:
     def __init__(self,
-                 search_words: dict[int: str],
+                 search_words: List[str],
                  max_images: int = 5,
                  download_path: str = 'downloads'
                  ):
@@ -26,15 +27,16 @@ class ImageProcessor:
 
     def process_images_in_download_path(self):
         for image in os.listdir(self.download_path):
-            image = cv2.imread(os.path.join(self.download_path, image))
+            if image != None:
+                image = cv2.imread(os.path.join(self.download_path, image))
 
-            edge_detector = EdgeDetector(image)
-            edge_detector.draw_image_as_contours()
+                edge_detector = EdgeDetector(image)
+                edge_detector.draw_image_as_contours()
 
-            obj = edge_detector.obj_in_image
-            if obj is not None:
-                # obj = cv2.resize(obj, (obj.shape[1]*2, obj.shape[0]*2), cv2.INTER_NEAREST)
-                self.objects_found.append(obj)
+                obj = edge_detector.obj_in_image
+                if obj is not None:
+                    # obj = cv2.resize(obj, (obj.shape[1]*2, obj.shape[0]*2), cv2.INTER_NEAREST)
+                    self.objects_found.append(obj)
 
     def cleanup_downloads(self):
         [os.remove(os.path.join(self.download_path, image))

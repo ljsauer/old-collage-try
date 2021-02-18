@@ -11,7 +11,7 @@ class RandomPlacement(Grid):
         super().__init__(width=background.shape[1], height=background.shape[0])
         self.background = background
         self.objects = objects
-        self.iter_cap = 600
+        self.iter_cap = 1000
 
     def _place_objects(self):
         # TODO: Optimize placement around image to minimize empty space

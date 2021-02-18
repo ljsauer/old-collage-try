@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+opencv-contrib-python = "*"
 numpy = "*"
 google-images-download = "*"
 pillow = "*"
@@ -11,7 +12,7 @@ imutils = "*"
 shapely = "*"
 wordcloud = "*"
 flask = "*"
-loguru = "*"
+pony = "*"
 
 [dev-packages]
 

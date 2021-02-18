@@ -16,8 +16,8 @@ class Grid:
         self.circles = []
 
     def adjust(self, circle: Circle) -> List:
-        circle.x = int(randint(0, self.width - circle.radius))
-        circle.y = int(randint(0, self.height - circle.radius))
+        circle.x = randint(0, self.width - circle.radius)
+        circle.y = randint(0, self.height - circle.radius)
 
     def add(self, circle: Circle) -> bool:
         self.circles.append(circle)
