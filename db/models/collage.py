@@ -1,20 +1,11 @@
-import re
 from datetime import datetime
 
-from pony import orm
 from pony.orm import Required, select, db_session, StrArray, PrimaryKey, Optional
 
-db = orm.Database()
+from db.database import start_db
 
-try:
-    db.bind(provider='sqlite', filename='database.sqlite')
-except OSError as ex:
-    expected_path = str(ex).split(": ")[1].replace("'", "")
-    file_name = re.split("/", expected_path)[-1].replace("'", "")
-    open(f"{expected_path.replace(file_name, '')}/{file_name}", "a").close()
-    db.bind(provider='sqlite', filename='database.sqlite')
 
-orm.sql_debug(True)
+db = start_db()
 
 
 class Collage(db.Entity):

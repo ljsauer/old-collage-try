@@ -1,14 +1,16 @@
+# TODO: bootstrap loading screen?
+
+# TODO: Show collages in grid on welcome page
+
+# TODO: Back button & collage info on welcome page
 import os
 
 from flask import Flask, render_template, url_for, request
 
-# TODO: bootstrap loading screen?
-
-# TODO: Back button & collage info on collage page
 from pony.orm import db_session, commit
 from werkzeug.utils import redirect
 
-from app.computer_vision.image_collage import CollageGenerator
+from app.computer_vision.generator import Generator
 from app.settings import Settings
 from db.models.collage import Collage
 
@@ -29,17 +31,14 @@ def index():
 def create_collage():
     f = request.files['file']
     text = str(f.read())
-    generator = CollageGenerator(
-        text,
-        num_words=Settings.num_words,
-        img_per_word=Settings.image_per_word
-    )
+    generator = Generator(text)
     with db_session:
-        collage = Collage(words=generator.sig_sentences.important_words)
+        collage = Collage(words=generator.words)
         commit()
         collage_name = f"collage-{collage.id}"
 
-    generator.create_collage(f"{Settings.collage_dir}/{collage_name}.jpg")
+    collage_image = generator.make()
+    generator.write_to_disk(collage_name, collage_image)
 
     return redirect(url_for('static', filename=f"{collage_name}.jpg"))
 
@@ -48,14 +47,14 @@ def create_collage():
 def get_collage(collage_id: int):
     with db_session:
         collage = Collage.find(collage_id)
-    return render_template("image.html", image_collage=f"{Settings.collage_dir}_{collage.name}.jpg")
+    return render_template("image.html", image_collage=f"/{Settings.collage_dir}_{collage.name}.jpg")
 
 
 @app.route("/collage/{collage_id}", methods=['DELETE'])
 def delete_collage(collage_id: int):
     with db_session:
         collage = Collage.find(collage_id)
-    os.remove(f"{Settings.collage_dir}/{collage.image_path}")
+    os.remove(f"/{Settings.collage_dir}/{collage.image_path}")
     collage.delete()
 
 

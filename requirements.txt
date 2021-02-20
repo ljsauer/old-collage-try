@@ -4,5 +4,4 @@ google-images-download
 pillow
 imutils
 shapely
-wordcloud
 pony

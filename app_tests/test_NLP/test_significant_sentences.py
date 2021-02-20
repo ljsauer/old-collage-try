@@ -18,5 +18,9 @@ class TestSignificantSentences(unittest.TestCase):
             self.sig_sents.get_significant_sentences()[-1],
             "Texas toast."
         )
-        self.assertTrue('text' in self.sig_sents.important_words.values())
-        self.assertFalse('goodbye' in self.sig_sents.important_words.values())
+        self.assertTrue('text' in self.sig_sents.rank_importance_of_words())
+        self.assertFalse('goodbye' in self.sig_sents.rank_importance_of_words())
+
+    def test_rank_importance_of_words(self):
+        important_words = self.sig_sents.rank_importance_of_words()
+        self.assertEqual("text", important_words[0])

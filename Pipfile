@@ -10,9 +10,10 @@ google-images-download = "*"
 pillow = "*"
 imutils = "*"
 shapely = "*"
-wordcloud = "*"
 flask = "*"
 pony = "*"
+factory-boy = "*"
+google-images-search = "*"
 
 [dev-packages]
 

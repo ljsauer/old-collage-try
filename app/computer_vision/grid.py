@@ -1,12 +1,7 @@
 from random import randint
 from typing import List
 
-
-class Circle:
-    def __init__(self, x, y, radius):
-        self.x = x
-        self.y = y
-        self.radius = radius
+from app.computer_vision.circle import Circle
 
 
 class Grid:
@@ -23,14 +18,14 @@ class Grid:
         self.circles.append(circle)
 
     def has_collisions(self, circle: Circle) -> bool:
-        if any([collides(circle, other) for other in self.circles]):
+        if any([self._collides(circle, other) for other in self.circles]):
             return True
 
-
-def collides(circle: Circle, other: Circle) -> bool:
-    if circle == other:
-        return False
-    dx = circle.x - other.x
-    dy = circle.y - other.y
-    rr = circle.radius + other.radius
-    return (dx * dx + dy * dy) < (rr * rr)
+    @staticmethod
+    def _collides(circle: Circle, other: Circle) -> bool:
+        if circle == other:
+            return False
+        dx = circle.x - other.x
+        dy = circle.y - other.y
+        rr = circle.radius + other.radius
+        return (dx * dx + dy * dy) < (rr * rr)
