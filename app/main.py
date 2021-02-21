@@ -23,7 +23,10 @@ class UploadError(object):
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    images = [image for image in os.listdir(Settings.collage_dir)]
+    grid_res = int(Settings.image_height / 5)
+    return render_template('index.html', image_names=(os.listdir(Settings.collage_dir)),
+                           grid_res=grid_res)
 
 
 @db_session

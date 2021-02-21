@@ -1,3 +1,4 @@
+import os
 import unittest
 
 import cv2
@@ -28,3 +29,11 @@ class TestEdgeDetector(unittest.TestCase):
         cv2.polylines(obj, [self.ed.biggest_contour], True, (0, 0, 255), 2, lineType=3)
         cv2.imshow("Object found", obj)
         cv2.waitKey(0)
+
+    def test_crop_object_from_images(self):
+        for image in os.listdir("test_imgs"):
+            if not image.endswith('jpg'):
+                continue
+            self.image = cv2.imread(f"test_imgs/{image}")
+            self.ed = EdgeDetector(self.image)
+            self.ed.draw_image_as_contours()

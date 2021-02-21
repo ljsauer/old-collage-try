@@ -34,7 +34,10 @@ class Generator:
 
     @staticmethod
     def _background_image():
-        bg_img = np.zeros((Settings.image_height, Settings.image_width, 3), dtype='uint8')
+        bg_img = np.ones((Settings.image_height, Settings.image_width, 3), dtype='uint8')
         b_channel, g_channel, r_channel = cv2.split(bg_img)
+        b_channel = b_channel * randint(0, 255)
+        g_channel = g_channel * randint(0, 255)
+        r_channel = r_channel * randint(0, 255)
         alpha_channel = np.ones(b_channel.shape, dtype=b_channel.dtype) * 50
         return cv2.merge((b_channel, g_channel, r_channel, alpha_channel))

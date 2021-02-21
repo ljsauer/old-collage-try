@@ -1,11 +1,9 @@
 from random import randint
 from typing import List
 
-import cv2
 import numpy as np
 
 from app.computer_vision.grid import Grid, Circle
-from app.settings import Settings
 
 
 class RandomPlacement(Grid):
@@ -34,22 +32,23 @@ class RandomPlacement(Grid):
                 continue
         return self.background
 
-    def _place_objects(self):
-        for obj in self.objects:
-            if obj is None:
-                continue
-            radius = max(obj.shape[:2])
-            if self.width - radius < 1:
-                continue
-            while radius > Settings.max_object_size:
-                obj = cv2.resize(obj, (int(obj.shape[1]*.25), int(obj.shape[0]*.25)), cv2.INTER_NEAREST)
+    def _place_objects(self) -> None:
+        for i, obj in enumerate(self.objects):
+            if obj is not None:
                 radius = max(obj.shape[:2])
-            circle = Circle(randint(0, self.width - radius),
-                            randint(0, self.height - radius),
-                            radius
-                            )
-            check = 0
-            while self.has_collisions(circle) and check < self.iter_cap:
-                self.adjust(circle)
-                check += 1
-            self.add(circle)
+                circle = Circle(randint(0, self.width - radius),
+                                randint(0, self.height - radius),
+                                radius
+                                )
+                check = 0
+                while self.has_collisions(circle) and check < self.iter_cap:
+                    self.adjust(circle)
+                    check += 1
+                if check > self.iter_cap:
+                    print("removing object")
+                    self.objects.pop(i)
+                    return
+                self.add(circle)
+            else:
+                self.objects.pop(i)
+

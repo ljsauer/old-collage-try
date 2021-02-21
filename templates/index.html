@@ -27,5 +27,26 @@
 </form>
 </div>
 
+<div class="container">
+    <br><br>
+    <div class="row text-center">
+            {% for name in image_names %}
+            <div class="col-sm-4 col-md-3 mb-4">
+                <img src="{{ url_for('static', filename=name) }}"
+                     height="{{ grid_res }}"
+                     alt="{{ name }}">
+                <caption>{{name}}</caption>
+            </div>
+            {% endfor %}
+    </div>
+</div>
+
+    <style>
+      div.imagetiles div.col-lg-3.col-md-3.col-sm-3.col-xs-6{
+        padding: 0px;
+      }
+    </style>
+
+
 </body>
 </html>

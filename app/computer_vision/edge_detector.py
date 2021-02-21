@@ -6,51 +6,50 @@ import numpy as np
 
 
 class EdgeDetector:
-    def __init__(self, image: np.array, min_object_size: float = .30):
+    def __init__(self, image: np.array):
         self.image = image
-        self.min_size = min_object_size
         self.obj_in_image: np.array = None
-        self.contour_mask: np.array = np.ones(self.image.shape[:2], dtype='uint8') * 255
+        self.contour_mask: np.array = np.zeros(self.image.shape[:2], dtype='uint8')
         self.biggest_contour: np.array = None
 
-    def draw_image_as_contours(self):
+    def draw_image_as_contours(self) -> None:
         self._draw_edges_of_objects()
         if self.biggest_contour is not None:
-            cv2.drawContours(self.contour_mask, self.biggest_contour, -1, (200, 200, 55), 4)
-
+            cv2.drawContours(self.contour_mask, self.biggest_contour, -1, (200, 200, 55), 3)
             contours_poly = cv2.approxPolyDP(self.biggest_contour, 3, True)
             bounding_rect = cv2.boundingRect(contours_poly)
             self._crop_object_from_image(bounding_rect)
-        else:
-            pass
+        return
 
-    def _draw_edges_of_objects(self):
-        try:
-            img_gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-            img_edges = cv2.Canny(img_gray, 100, 255)
-        except cv2.error:
-            img_edges = cv2.Canny(self.image, 100, 255)
+    def _draw_edges_of_objects(self) -> None:
+        v = np.median(self.image)
+        sigma = 0.33
+        # apply automatic Canny edge detection using the computed median
+        lower = int(max(0, (1.0 - sigma) * v))
+        upper = int(min(255, (1.0 + sigma) * v))
+        img_edges = cv2.Canny(self.image, lower, upper)
 
-        contours = cv2.findContours(img_edges.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours = cv2.findContours(img_edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         contours = imutils.grab_contours(contours)
+
         if len(contours) > 0:
             self.biggest_contour = max(contours, key=cv2.contourArea)
+        return
 
-    def _crop_object_from_image(self, bounding_rect: List[int]):
+    def _crop_object_from_image(self, bounding_rect: List[int]) -> None:
         bounding_rect = [x for x in bounding_rect]
         if bounding_rect[0] == 0:
             bounding_rect[0] = 1
         if bounding_rect[1] == 0:
             bounding_rect[1] = 1
-        background = np.zeros((1, 65), dtype='float')
-        foreground = np.zeros((1, 65), dtype='float')
-        _mask = np.zeros(self.image.shape[:2], dtype='uint8')
+        bg_model = np.zeros((1, 65), dtype='float')
+        fg_model = np.zeros((1, 65), dtype='float')
         image_copy = self.image.copy()
         (mask, background, foreground) = cv2.grabCut(image_copy,
                                                      self.contour_mask*0,
                                                      bounding_rect,
-                                                     background,
-                                                     foreground,
+                                                     bg_model,
+                                                     fg_model,
                                                      iterCount=1,
                                                      mode=cv2.GC_INIT_WITH_RECT)
         output_mask = np.where((mask == cv2.GC_BGD) | (mask == cv2.GC_PR_BGD), 0, 1)
@@ -62,3 +61,4 @@ class EdgeDetector:
         rgba = [b, g, r, alpha]
         dst = cv2.merge(rgba, 4)
         self.obj_in_image = dst
+        return
