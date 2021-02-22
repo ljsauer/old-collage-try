@@ -1,10 +1,9 @@
 from random import randint
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
 from app.computer_vision.rectangle import Rectangle
-from app.settings import Settings
 
 
 class RandomPlacement:
@@ -14,8 +13,11 @@ class RandomPlacement:
         self.iter_cap = 1000
         self.rectangles = []
 
-    def draw_objects(self) -> np.array:
-        self._place_objects()
+    def draw_objects(self, background: Optional[np.array] = None, redraw=False) -> np.array:
+        if not redraw:
+            self._place_objects()
+        if background is not None:
+            self.background = background
         for rect, obj in zip(self.rectangles, self.objects):
             try:
                 x, y = rect.x1, rect.y1
@@ -29,7 +31,8 @@ class RandomPlacement:
                             alpha_l *
                             self.background[y:y+h, x:x+w, c]
                     )
-            except ValueError:
+            except ValueError as e:
+                print(e)
                 continue
 
         return self.background

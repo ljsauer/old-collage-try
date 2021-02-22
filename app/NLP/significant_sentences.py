@@ -20,14 +20,9 @@ class SignificantSentences:
         important_words = []
 
         for i, (word, freq) in enumerate(word_frequency):
-            if i >= Settings.n_words:
+            important_words.append(word)
+            if i > Settings.n_words:
                 return important_words
-            if freq <= 1:
-                continue
-            if word not in important_words:
-                important_words.append(word)
-
-        return important_words
 
     def get_significant_sentences(self) -> List[str]:
         important_words = self.rank_importance_of_words()

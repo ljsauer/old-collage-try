@@ -9,9 +9,7 @@ from app.computer_vision.edge_detector import EdgeDetector
 
 class TestEdgeDetector(unittest.TestCase):
     def setUp(self) -> None:
-        # create gray image
         self.image = np.zeros((300, 300, 3), dtype='uint8')
-        # draw yellow circle on image
         self.image = cv2.circle(self.image, (150, 150), 25, (0, 255, 255), 2)
         img = self.image.copy()
         cv2.imshow("Original", img)

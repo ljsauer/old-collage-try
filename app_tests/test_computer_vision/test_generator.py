@@ -9,7 +9,7 @@ from app_tests.factories.collage_factory import CollageFactory
 
 
 class TestGenerator(unittest.TestCase):
-    def test_creates_collage(self):
+    def test_make_collage(self):
         text = "The short story is a crafted form in its own right. Short stories make use of plot, " \
                "resonance, and other dynamic components as in a novel, but typically to a lesser degree. " \
                "While the short story is largely distinct from the novel or novella (short novel), " \

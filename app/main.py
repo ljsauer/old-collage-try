@@ -1,8 +1,3 @@
-# TODO: bootstrap loading screen?
-
-# TODO: Show collages in grid on welcome page
-
-# TODO: Back button & collage info on welcome page
 import os
 
 from flask import Flask, render_template, url_for, request

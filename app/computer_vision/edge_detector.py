@@ -18,7 +18,7 @@ class EdgeDetector:
             cv2.drawContours(self.contour_mask, self.biggest_contour, -1, (200, 200, 55), 3)
             contours_poly = cv2.approxPolyDP(self.biggest_contour, 3, True)
             bounding_rect = cv2.boundingRect(contours_poly)
-            self._crop_object_from_image(bounding_rect)
+            self._crop_object_from_image(list(bounding_rect))
         return
 
     def _draw_edges_of_objects(self) -> None:
@@ -34,13 +34,14 @@ class EdgeDetector:
 
         if len(contours) > 0:
             self.biggest_contour = max(contours, key=cv2.contourArea)
+
         return
 
     def _crop_object_from_image(self, bounding_rect: List[int]) -> None:
-        bounding_rect = [x for x in bounding_rect]
-        if bounding_rect[0] == 0:
+        x, y, w, h = bounding_rect
+        if x == 0:
             bounding_rect[0] = 1
-        if bounding_rect[1] == 0:
+        if y == 0:
             bounding_rect[1] = 1
         bg_model = np.zeros((1, 65), dtype='float')
         fg_model = np.zeros((1, 65), dtype='float')
@@ -60,5 +61,5 @@ class EdgeDetector:
         b, g, r = cv2.split(obj_img)
         rgba = [b, g, r, alpha]
         dst = cv2.merge(rgba, 4)
-        self.obj_in_image = dst
+        self.obj_in_image = dst[y:y+h, x:x+w, :]
         return
