@@ -13,7 +13,7 @@
 
 <div class="jumbotron text-center">
     <h1><b>Text to Collage</b></h1>
-  <h2>WWT Capstone Project</h2>
+    <h2>WWT Capstone Project</h2>
     <h4>Lillie Sauer</h4>
 </div>
 
@@ -31,25 +31,34 @@
         font-family: "Helvetica", sans-serif;
         font-size: 20px;
       }
+      .hidden {
+        display: none;
+      }
     </style>
 <div class="container">
     <br>
     <div class="row text-center">
+             <!--collage grid-->
             {% for row in collages %}
-            <div class="col-md m-1">
+            <div class="col-sm m-1">
                 <img src="{{ url_for('static', filename=row.path) }}"
                      height="{{ img_size }}"
                      alt="{{ row.name }}">
                 <br>
                 <p>{{row.name}}</p>
-
+                <form action="" method="post">
                 <a href="/update/{{row.id}}" class="btn btn-outline-primary"
                    data-target="#modaledit{{row.id}}"
-                   data-toggle="modal" methods="POST">Edit</a>
-                <a href="/delete/{{row.id}}" class="btn btn-outline-danger" methods="POST"
-                   onclick="return confirm('Are you sure you want to delete this masterpiece?')">Delete</a>
+                   data-toggle="modal" methods="POST">Rename</a>
+                    <button formaction="/delete/{{row.id}}" class="btn btn-outline-danger"
+                            type="submit"
+                            onclick="return confirm('Are you sure you want to delete this masterpiece?')">
+                            Delete
+                    </button>
+                </form>
+                <!--rename modal-->
                 <div id="modaledit{{row.id}}" class="modal fade" role="dialog">
-                <div class="modal-dialog">
+                <div class="modal-dialog" >
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title">Update Name</h4>
@@ -73,9 +82,9 @@
                 </div>
                 </div>
             </div>
+            {% endfor %}
 
     </div>
-            {% endfor %}
 </div>
 
 </body>

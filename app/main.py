@@ -32,7 +32,7 @@ def index(collages: Optional[List[Collage]] = False):
 
 
 @db_session
-@app.route('/collage', methods=['POST'])
+@app.route('/collage', methods=['GET', 'POST'])
 def create_collage():
     f = request.files['file']
     text = str(f.read())
@@ -55,21 +55,21 @@ def create_collage():
 @app.route("/update/<collage_id>", methods=['POST'])
 def rename_collage(collage_id: int):
     with db_session:
-        collage = Collage.select(lambda c: c.id == collage_id)
+        collage = Collage[collage_id]
         collage.name = request.form['name']
         commit()
         collages = Collage.select(lambda c: c)
 
     flash("Collage Updated Successfully")
 
-    return index(collages)
+    return index(collages=collages)
 
 
 @db_session
 @app.route("/delete/<collage_id>", methods=['POST'])
 def delete_collage(collage_id: int):
     with db_session:
-        collage = Collage.select(lambda c: c.id == collage_id)
+        collage = Collage[collage_id]
         collage_path = collage.path
         Collage[collage_id].delete()
         commit()
@@ -78,7 +78,7 @@ def delete_collage(collage_id: int):
 
     os.remove(f"{Settings.collage_dir}/{collage_path}")
 
-    return index()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
