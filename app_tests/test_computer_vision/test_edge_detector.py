@@ -16,12 +16,14 @@ class TestEdgeDetector(unittest.TestCase):
         img = self.image.copy()
         cv2.imshow("Original", img)
         cv2.waitKey(0)
-        self.ed = EdgeDetector(self.image, min_object_size=1)
+        self.ed = EdgeDetector(self.image)
+        cv2.destroyAllWindows()
 
     def test_draws_contours(self):
         self.ed.draw_image_as_contours()
         cv2.imshow("Contours", self.ed.contour_mask)
         cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def test_finds_objects_in_image(self):
         self.ed.draw_image_as_contours()
@@ -29,6 +31,7 @@ class TestEdgeDetector(unittest.TestCase):
         cv2.polylines(obj, [self.ed.biggest_contour], True, (0, 0, 255), 2, lineType=3)
         cv2.imshow("Object found", obj)
         cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def test_crop_object_from_images(self):
         for image in os.listdir("test_imgs"):
@@ -37,3 +40,6 @@ class TestEdgeDetector(unittest.TestCase):
             self.image = cv2.imread(f"test_imgs/{image}")
             self.ed = EdgeDetector(self.image)
             self.ed.draw_image_as_contours()
+            cv2.imshow("object", self.ed.obj_in_image)
+            cv2.waitKey(0)
+        cv2.destroyAllWindows()

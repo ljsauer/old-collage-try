@@ -25,3 +25,4 @@ class TestGenerator(unittest.TestCase):
         collage_img = cv2.imread(f"{Settings.collage_dir}/{collage_name}.jpg")
         cv2.imshow("collage", collage_img)
         cv2.waitKey(0)
+        cv2.destroyAllWindows()

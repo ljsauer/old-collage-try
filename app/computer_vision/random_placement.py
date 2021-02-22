@@ -35,7 +35,7 @@ class RandomPlacement:
         return self.background
 
     def _place_objects(self) -> None:
-        H, W = Settings.image_height, Settings.image_width
+        H, W = self.background.shape[:2]
         for i, obj in enumerate(self.objects):
             h, w = obj.shape[:2]
             x, y = (randint(0, W - w), randint(0, H - h))
