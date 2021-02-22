@@ -3,7 +3,13 @@ import os
 
 class Settings:
     collage_dir: str = f"{os.getcwd()}/static"
+    if not os.path.exists(collage_dir):
+        print("Making collage directory at: ", collage_dir)
+        os.mkdir(collage_dir)
     object_image_path: str = f"{os.getcwd()}/downloads"
+    if not os.path.exists(object_image_path):
+        print("Making download path at: ", object_image_path)
+        os.mkdir(object_image_path)
     n_words: int = 20    # number of important words from text to include in collage
     n_sentences: int = 10   # not used in this project currently
     image_per_word: int = 3   # number of images to represent each word in collage

@@ -6,14 +6,16 @@ name = "pypi"
 [packages]
 opencv-contrib-python = "*"
 numpy = "*"
-google-images-download = "*"
-pillow = "*"
+nltk = "*"
+flask = "*"
 imutils = "*"
 shapely = "*"
-flask = "*"
 pony = "*"
+wordcloud = "*"
 factory-boy = "*"
-google-images-search = "*"
+beautifulsoup4 = "*"
+google-images-download = "*"
+# google-images-search = "*"
 
 [dev-packages]
 

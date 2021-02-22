@@ -27,10 +27,6 @@ class ImageSearch:
 
         self.SEARCH_PARAMS.update({"q": keyword})
 
-        if not os.path.exists(self.download_path):
-            print("Making download path at: ", self.download_path)
-            os.mkdir(self.download_path)
-
     def download_google_images(self):
         # try:
         #     # Image Search 2.0

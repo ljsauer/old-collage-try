@@ -1,7 +1,12 @@
+opencv-contrib-python
 numpy
-opencv-python-contrib
-google-images-download
-pillow
+nltk
+flask
 imutils
 shapely
 pony
+wordcloud
+factory-boy
+beautifulsoup4
+google-images-download
+google-images-search
