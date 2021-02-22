@@ -16,6 +16,7 @@ class Settings:
     image_width: int = 1024   # width of the image collage
     image_height: int = 768   # height of the image collage
     max_object_size: int = int(image_width * .2)
+    max_word_size: int = 75
 
     colormaps = [
         'Accent', 'Accent_r', 'Blues', 'Blues_r', 'BrBG', 'BrBG_r', 'BuGn', 'BuGn_r', 'BuPu', 'BuPu_r', 'CMRmap',

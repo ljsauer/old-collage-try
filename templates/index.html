@@ -23,30 +23,26 @@
 <form action="http://127.0.0.1:8080/collage" method="POST"
       enctype="multipart/form-data">
     <input type="file" name="file"/>
-    <input type="submit"/>
+    <button class="btn btn-outline-success" type="submit">Submit</button>
 </form>
 </div>
 
 <div class="container">
     <br><br>
     <div class="row text-center">
-            {% for name in image_names %}
-            <div class="col-sm-4 col-md-3 mb-3">
-                <img src="{{ url_for('static', filename=name) }}"
+            {% for name, path in images %}
+            <div class="col-md m-2">
+                <img src="{{ url_for('static', filename=path) }}"
                      height="{{ img_size }}"
                      alt="{{ name }}">
-                <caption><b>{{name}}</b></caption>
+                <br>
+                <caption><b>{{name}}</b></caption><br>
+                <button class="btn btn-outline-primary" type="submit">Rename</button>
+                <button class="btn btn-outline-danger" type="submit">Delete</button>
             </div>
             {% endfor %}
     </div>
 </div>
-
-    <style>
-      div.imagetiles div.col-lg-3.col-md-3.col-sm-3.col-xs-6{
-        padding: 0px;
-      }
-    </style>
-
 
 </body>
 </html>

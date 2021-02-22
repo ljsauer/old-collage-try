@@ -3,7 +3,6 @@ import unittest
 import cv2
 import numpy as np
 
-from app.computer_vision.random_placement import RandomPlacement
 from app.computer_vision.rectangle import Rectangle
 
 

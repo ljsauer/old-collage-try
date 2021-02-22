@@ -20,7 +20,6 @@ class TestGenerator(unittest.TestCase):
         with db_session:
             collage = CollageFactory(words=generator.words)
             collage_name = collage.name
-
         generator.write_to_disk(collage_name, collage_image)
         collage_img = cv2.imread(f"{Settings.collage_dir}/{collage_name}.jpg")
         cv2.imshow("collage", collage_img)

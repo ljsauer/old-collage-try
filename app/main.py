@@ -18,10 +18,11 @@ class UploadError(object):
 
 @app.route('/', methods=['GET'])
 def index():
-    img_size = int(Settings.image_height / 5)
+    img_size = int(Settings.image_height / 4)
+    img_names = [name[:-4] for name in os.listdir(Settings.collage_dir)]
     try:
         return render_template('index.html',
-                               image_names=(os.listdir(Settings.collage_dir)),
+                               images=zip(img_names, os.listdir(Settings.collage_dir)),
                                img_size=img_size)
     except FileNotFoundError:
         return render_template('index.html')
