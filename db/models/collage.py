@@ -12,6 +12,7 @@ class Collage(db.Entity):
     id = PrimaryKey(int, auto=True)
     words = Required(StrArray)
     name = Optional(str)
+    path = Optional(str)
     created_datetime = Required(
         datetime, default=datetime.now(), sql_type="timestamp with time zone"
     )
