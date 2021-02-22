@@ -23,10 +23,13 @@ class UploadError(object):
 
 @app.route('/', methods=['GET'])
 def index():
-    images = [image for image in os.listdir(Settings.collage_dir)]
-    grid_res = int(Settings.image_height / 5)
-    return render_template('index.html', image_names=(os.listdir(Settings.collage_dir)),
-                           grid_res=grid_res)
+    img_size = int(Settings.image_height / 5)
+    try:
+        return render_template('index.html',
+                               image_names=(os.listdir(Settings.collage_dir)),
+                               img_size=img_size)
+    except FileNotFoundError:
+        return render_template('index.html')
 
 
 @db_session

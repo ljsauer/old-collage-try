@@ -1,5 +1,4 @@
-import random
-import unittest
+from random import randint, choice
 
 import cv2
 import numpy as np
@@ -14,14 +13,14 @@ iter_cap = 10000
 grid = Grid(w, h)
 
 for i in range(0, 50):
-    radius = random.choice(radii)
-    circle = Circle(random.randint(radius, w - radius),
-                    random.randint(radius, h - radius),
+    radius = choice(radii)
+    circle = Circle(randint(radius, w - radius),
+                    randint(radius, h - radius),
                     radius)
     check = 0
     while grid.has_collisions(circle) and check < iter_cap:
-        circle.x = int(random.randint(0, w) * (w - radius * 2) + radius)
-        circle.y = int(random.randint(0, h) * (w - radius * 2) + radius)
+        circle.x = int(randint(0, w) * (w - circle.radius * 2) + circle.radius)
+        circle.y = int(randint(0, h) * (w - circle.radius * 2) + circle.radius)
         check += 1
     grid.add(circle)
 

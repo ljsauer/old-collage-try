@@ -3,21 +3,22 @@ from typing import List
 
 import numpy as np
 
-from app.computer_vision.grid import Grid, Circle
+from app.computer_vision.rectangle import Rectangle
+from app.settings import Settings
 
 
-class RandomPlacement(Grid):
+class RandomPlacement:
     def __init__(self, background: np.array, objects: List[np.array]):
-        super().__init__(width=background.shape[1], height=background.shape[0])
         self.background = background
         self.objects = objects
         self.iter_cap = 1000
+        self.rectangles = []
 
     def draw_objects(self) -> np.array:
         self._place_objects()
-        for circle, obj in zip(self.circles, self.objects):
+        for rect, obj in zip(self.rectangles, self.objects):
             try:
-                x, y = circle.x, circle.y
+                x, y = rect.x1, rect.y1
                 h, w = obj.shape[:2]
                 alpha_s = obj[:, :, 3] / 255.0
                 alpha_l = 1.0 - alpha_s
@@ -30,25 +31,25 @@ class RandomPlacement(Grid):
                     )
             except ValueError:
                 continue
+
         return self.background
 
     def _place_objects(self) -> None:
+        H, W = Settings.image_height, Settings.image_width
         for i, obj in enumerate(self.objects):
-            if obj is not None:
-                radius = max(obj.shape[:2])
-                circle = Circle(randint(0, self.width - radius),
-                                randint(0, self.height - radius),
-                                radius
-                                )
-                check = 0
-                while self.has_collisions(circle) and check < self.iter_cap:
-                    self.adjust(circle)
-                    check += 1
+            h, w = obj.shape[:2]
+            x, y = (randint(0, W - w), randint(0, H - h))
+            current = Rectangle(x, y, w, h)
+            check = 0
+            while self.has_collisions(current):
+                current.x1 = randint(0, int(W - w))
+                current.y1 = randint(0, int(H - h))
+                check += 1
                 if check > self.iter_cap:
-                    print("removing object")
                     self.objects.pop(i)
                     return
-                self.add(circle)
-            else:
-                self.objects.pop(i)
+            self.rectangles.append(current)
+        return
 
+    def has_collisions(self, rect: Rectangle) -> bool:
+        return any([rect.collides(other) for other in self.rectangles])

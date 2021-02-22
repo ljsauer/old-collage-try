@@ -31,11 +31,11 @@
     <br><br>
     <div class="row text-center">
             {% for name in image_names %}
-            <div class="col-sm-4 col-md-3 mb-4">
+            <div class="col-sm-4 col-md-3 mb-3">
                 <img src="{{ url_for('static', filename=name) }}"
-                     height="{{ grid_res }}"
+                     height="{{ img_size }}"
                      alt="{{ name }}">
-                <caption>{{name}}</caption>
+                <caption><b>{{name}}</b></caption>
             </div>
             {% endfor %}
     </div>

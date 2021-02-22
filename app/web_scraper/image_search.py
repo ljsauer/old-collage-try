@@ -37,7 +37,7 @@ class ImageSearch:
         #     gis = GoogleImagesSearch(developer_key=self.API_KEY, custom_search_cx=self.CX_ID)
         #     gis.search(search_params=self.SEARCH_PARAMS, path_to_dir=self.download_path)
         # except HttpError:
-        print(f"query limit reached -- reverting to Image Search v1.0")
+        # print(f"query limit reached -- reverting to Image Search v1.0")
         url = f'https://www.google.com/search?q={self.keyword}+images' \
               f'&tbm=isch&hl=en&safe=active&%2Cisz:l&sa=X' \
               f'&ved=0CAIQpwVqFwoTCIiQ6KKW7O4CFQAAAAAdAAAAABAC&biw=1032&bih=1707'
