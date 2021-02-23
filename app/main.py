@@ -1,5 +1,4 @@
 import os
-from typing import Optional, List
 
 from flask import Flask, render_template, url_for, request, flash
 
@@ -20,12 +19,11 @@ class UploadError(object):
 
 @db_session
 @app.route('/', methods=['GET'])
-def index(collages: Optional[List[Collage]] = False):
+def index():
     img_size = int(Settings.image_height / 4)
     with db_session:
-        if not collages:
-            collages = Collage.select(lambda c: c)
         try:
+            collages = Collage.select(lambda c: c)
             return render_template('index.html', collages=collages, img_size=img_size)
         except FileNotFoundError:
             return render_template('index.html')
@@ -58,11 +56,10 @@ def rename_collage(collage_id: int):
         collage = Collage[collage_id]
         collage.name = request.form['name']
         commit()
-        collages = Collage.select(lambda c: c)
 
-    flash("Collage Updated Successfully")
+    flash("Collage updated successfully")
 
-    return index(collages=collages)
+    return redirect(url_for('index'))
 
 
 @db_session
@@ -74,7 +71,7 @@ def delete_collage(collage_id: int):
         Collage[collage_id].delete()
         commit()
 
-    flash("Collage Deleted Successfully")
+    flash("Collage deleted successfully")
 
     os.remove(f"{Settings.collage_dir}/{collage_path}")
 

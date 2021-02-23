@@ -79,6 +79,8 @@ class ObjectHandler:
                 if check > self.iter_cap:
                     self.objects.pop(i)
                     break
+            current.x2 = int(current.x1+w)
+            current.y2 = int(current.y1+h)
             self.rectangles.append(current)
         return
 
