@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 
 class Settings:
@@ -10,15 +11,20 @@ class Settings:
     if not os.path.exists(object_image_path):
         print("Making download path at: ", object_image_path)
         os.mkdir(object_image_path)
-    n_words: int = 20    # number of important words from text to include in collage
+    n_words: int = 25    # number of important words from text to include in collage
     n_sentences: int = 10   # not used in this project currently
-    image_per_word: int = 3   # number of images to represent each word in collage
+    image_per_word: int = 4   # number of images to represent each word in collage
     image_width: int = 1024   # width of the image collage
     image_height: int = 768   # height of the image collage
     max_object_size: int = int(image_width * .2)
-    max_word_size: int = 75
+    max_word_size: int = 150
+    undesired_words: List[str] = [
+        "said", "might", "towards", "found", "must", "things", "last", "make",
+        "upon", "shall", "gutenberg", "many", "with", "without", "like",
+        "project", "thee", "thou", "thus"
+    ]
 
-    colormaps = [
+    colormaps: List[str] = [
         'Accent', 'Accent_r', 'Blues', 'Blues_r', 'BrBG', 'BrBG_r', 'BuGn', 'BuGn_r', 'BuPu', 'BuPu_r', 'CMRmap',
         'CMRmap_r', 'Dark2', 'Dark2_r', 'GnBu', 'GnBu_r', 'Greens', 'Greens_r', 'Greys', 'Greys_r', 'OrRd', 'OrRd_r',
         'Oranges', 'Oranges_r', 'PRGn', 'PRGn_r', 'Paired', 'Paired_r', 'Pastel1', 'Pastel1_r', 'Pastel2', 'Pastel2_r',

@@ -22,7 +22,8 @@ class SignificantSentences:
         for i, (word, freq) in enumerate(word_frequency):
             important_words.append(word)
             if i > Settings.n_words:
-                return important_words
+                break
+        return important_words
 
     def get_significant_sentences(self) -> List[str]:
         important_words = self.rank_importance_of_words()
@@ -38,14 +39,16 @@ class SignificantSentences:
 
     def _clean_text(self) -> List[str]:
         text_lower = word_tokenize(self.text.lower())
-        _stopwords = set(stopwords.words('english') + list(punctuation))
+        _stopwords = set(stopwords.words('english') +
+                         list(punctuation) +
+                         Settings.undesired_words)
         nums = [str(n) for n in range(0, 10)]
 
         words = [word.replace(r'\n', '').replace(r'\r', '') for
                  word in text_lower if word not in _stopwords]
 
-        for word in words:
-            if any([n in word for n in nums]) or len(word) < 4:
+        for word in words:  # hail mary
+            if any([n in word for n in nums]) or len(word) < 4 or "x" in word:
                 words.remove(word)
         return words
 

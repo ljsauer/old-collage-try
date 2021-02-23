@@ -3,6 +3,7 @@ import unittest
 import cv2
 import numpy as np
 
+from app.computer_vision.object_handler import ObjectHandler
 from app.computer_vision.rectangle import Rectangle
 
 
@@ -16,7 +17,8 @@ class TestRandomPlacement(unittest.TestCase):
 
         bg = np.ones((100, 100), dtype='uint8')
         objects = [bg]
-        mock_random_placement = RandomPlacement(bg, objects)
+        mock_random_placement = ObjectHandler(["pizza"])
+        mock_random_placement.objects = objects
         mock_random_placement.rectangles = rect_list
         mock_random_placement.has_collisions(rect_1)
         self.assertTrue(mock_random_placement.has_collisions(rect_1))
@@ -30,7 +32,8 @@ class TestRandomPlacement(unittest.TestCase):
 
         bg = np.ones((100, 100), dtype='uint8')
         objects = [bg]
-        mock_random_placement = RandomPlacement(bg, objects)
+        mock_random_placement = ObjectHandler(["pizza"])
+        mock_random_placement.objects = objects
         mock_random_placement.rectangles = rect_list
         mock_random_placement.has_collisions(rect_1)
         self.assertFalse(mock_random_placement.has_collisions(rect_1))
@@ -46,9 +49,9 @@ class TestRandomPlacement(unittest.TestCase):
         img4 = object_bg.copy()
         cv2.circle(img4, (15, 15), 10, (0, 0, 255), -1)
         objects = [img1, img2, img3, img4] * 5
-        bg = np.zeros((500, 500, 4), dtype='uint8')
-        mock_random_placement = RandomPlacement(bg, objects)
+        mock_random_placement = ObjectHandler(["pizza"])
+        mock_random_placement.objects = objects
         mock_random_placement.draw_objects()
-        cv2.imshow("result", bg)
+        cv2.imshow("result", mock_random_placement.background)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
