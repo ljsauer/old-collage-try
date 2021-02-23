@@ -8,23 +8,14 @@ import numpy as np
 class EdgeDetector:
     def __init__(self, image: np.array):
         self.image = image
-        self.obj_in_image: np.array = None
+
+        self.object: np.array = None
         self.contour_mask: np.array = np.zeros(self.image.shape[:2], dtype='uint8')
-        self.biggest_contour: np.array = None
 
-    def draw_image_as_contours(self) -> None:
-        self._draw_edges_of_objects()
-        if self.biggest_contour is not None:
-            cv2.drawContours(self.contour_mask, self.biggest_contour, -1, (200, 200, 55), 3)
-            contours_poly = cv2.approxPolyDP(self.biggest_contour, 3, True)
-            bounding_rect = cv2.boundingRect(contours_poly)
-            self._crop_object_from_image(list(bounding_rect))
-        return
-
-    def _draw_edges_of_objects(self) -> None:
+    def locate_largest_object(self) -> None:
+        # apply automatic Canny edge detection
         v = np.median(self.image)
-        sigma = 0.65
-        # apply automatic Canny edge detection using the computed median
+        sigma = 0.75
         lower = int(max(0, (1.0 - sigma) * v))
         upper = int(min(255, (1.0 + sigma) * v))
         img_edges = cv2.Canny(self.image, lower, upper)
@@ -33,7 +24,11 @@ class EdgeDetector:
         contours = imutils.grab_contours(contours)
 
         if len(contours) > 0:
-            self.biggest_contour = max(contours, key=cv2.contourArea)
+            largest_object_contours = max(contours, key=cv2.contourArea)
+            cv2.drawContours(self.contour_mask, largest_object_contours, -1, (200, 200, 55), 3)
+            contours_poly = cv2.approxPolyDP(largest_object_contours, 3, True)
+            bounding_rect = cv2.boundingRect(contours_poly)
+            self._crop_object_from_image(list(bounding_rect))
 
         return
 
@@ -61,5 +56,6 @@ class EdgeDetector:
         b, g, r = cv2.split(obj_img)
         rgba = [b, g, r, alpha]
         dst = cv2.merge(rgba, 4)
-        self.obj_in_image = dst[y:y+h, x:x+w, :]
+        self.object = dst[y:y+h, x:x+w, :]
+
         return

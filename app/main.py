@@ -46,7 +46,7 @@ def create_collage():
     collage_image = generator.make()
     generator.write_to_disk(collage_name, collage_image)
 
-    return redirect(url_for('static', filename=f"{collage_name}.jpg"))
+    return redirect(url_for('index'))
 
 
 @db_session

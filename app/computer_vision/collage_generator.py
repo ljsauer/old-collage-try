@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 from wordcloud import WordCloud
 
-from app.NLP.significant_sentences import SignificantSentences
+from app.NLP.significant_sentences import ImportantWords
 from app.computer_vision.edge_detector import EdgeDetector
 from app.computer_vision.rectangle import Rectangle
 from app.settings import Settings
@@ -15,8 +15,8 @@ from app.web_scraper.image_search import ImageSearch
 
 class CollageGenerator:
     def __init__(self, text: str):
-        self.significant_sentences = SignificantSentences(text)
-        self.words = self.significant_sentences.rank_importance_of_words()
+        self.important_words = ImportantWords(text)
+        self.words = self.important_words.rank_by_frequency()
 
         self.max_images = Settings.image_per_word
         self.download_path = Settings.object_image_path
@@ -80,9 +80,9 @@ class CollageGenerator:
             image = cv2.imread(f"{Settings.object_image_path}/{image}")
 
             edge_detector = EdgeDetector(image)
-            edge_detector.draw_image_as_contours()
+            edge_detector.locate_largest_object()
 
-            obj = edge_detector.obj_in_image
+            obj = edge_detector.object
             if obj is not None:
                 self.objects.append(obj)
 
