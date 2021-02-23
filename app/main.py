@@ -5,7 +5,7 @@ from flask import Flask, render_template, url_for, request, flash
 from pony.orm import db_session, commit
 from werkzeug.utils import redirect
 
-from app.computer_vision.generator import Generator
+from app.computer_vision.collage_generator import CollageGenerator
 from app.settings import Settings
 from db.models.collage import Collage
 
@@ -34,7 +34,7 @@ def index():
 def create_collage():
     f = request.files['file']
     text = str(f.read())
-    generator = Generator(text)
+    generator = CollageGenerator(text)
     with db_session:
         collage = Collage(words=generator.words)
         commit()
