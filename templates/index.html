@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1557239464/easyzoom.css">
+  <script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1557239478/easyzoom.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -41,9 +43,13 @@
              <!--collage grid-->
             {% for row in collages %}
             <div class="col-sm m-1">
-                <img src="{{ url_for('static', filename=row.path) }}"
-                     height="{{ img_size }}"
-                     alt="{{ row.name }}">
+                <div class="easyzoom easyzoom--overlay">
+                    <a href="{{ url_for('static', filename=row.path) }}">
+                        <img src="{{ url_for('static', filename=row.path) }}"
+                             height="{{ img_size }}"
+                             alt="{{ row.name }}">
+                    </a>
+                </div>
                 <br>
                 <p>{{row.name}}</p>
                 <form action="" method="post">
