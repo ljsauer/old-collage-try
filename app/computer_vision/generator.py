@@ -16,21 +16,17 @@ class Generator:
         self.object_handler = ObjectHandler(self.words)
 
     def make(self) -> np.array:
-        self._gather_objects()
+        self.object_handler.get_images()
+
         mask = self.object_handler.draw_objects()
 
         self.object_handler.background = self._wordcloud_background(mask)
+
         return self.object_handler.draw_objects(redraw=True)
 
     @staticmethod
     def write_to_disk(collage_name: str, collage_image: np.array):
         cv2.imwrite(f"{Settings.collage_dir}/{collage_name}.jpg", collage_image)
-
-    def _gather_objects(self) -> None:
-        for searchword in self.words:
-            self.object_handler.gather_images_from_web(searchword)
-            self.object_handler.process_images_in_download_path()
-            self.object_handler.cleanup_downloads()
 
     def _wordcloud_background(self, mask: np.array) -> np.array:
         colormap = choice(Settings.colormaps)

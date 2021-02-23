@@ -23,7 +23,7 @@ class EdgeDetector:
 
     def _draw_edges_of_objects(self) -> None:
         v = np.median(self.image)
-        sigma = 0.33
+        sigma = 0.65
         # apply automatic Canny edge detection using the computed median
         lower = int(max(0, (1.0 - sigma) * v))
         upper = int(min(255, (1.0 + sigma) * v))

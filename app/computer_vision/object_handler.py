@@ -14,7 +14,6 @@ from app.web_scraper.image_search import ImageSearch
 class ObjectHandler:
     def __init__(self, words: List[str]):
         self.words = words
-        self.first_image = True
 
         self.max_images = Settings.image_per_word
         self.download_path = Settings.object_image_path
@@ -26,23 +25,12 @@ class ObjectHandler:
         self.iter_cap = 1000
         self.rectangles = []
 
-    @staticmethod
-    def gather_images_from_web(searchword: str):
-        image_searcher = ImageSearch(searchword)
-        image_searcher.download_google_images()
-
-    def process_images_in_download_path(self):
-        for image in os.listdir(self.download_path):
-            if not image.endswith(("jpg", "png")):
-                continue
-            image = cv2.imread(f"{Settings.object_image_path}/{image}")
-
-            edge_detector = EdgeDetector(image)
-            edge_detector.draw_image_as_contours()
-
-            obj = edge_detector.obj_in_image
-            if obj is not None:
-                self.objects.append(obj)
+    def get_images(self):
+        for word in self.words:
+            image_searcher = ImageSearch(word)
+            image_searcher.download_google_images()
+            self._find_objects()
+        self._cleanup_downloads()
 
     def draw_objects(self, redraw=False) -> np.array:
         if not redraw:
@@ -60,10 +48,31 @@ class ObjectHandler:
                             self.background[y1:y2, x1:x2, c]
                     )
             except ValueError as e:
-                print(e, x1, x2, y1, y2)
-                continue
+                print(e)
 
         return self.background
+
+    def has_collisions(self, rect: Rectangle) -> bool:
+        return any([rect.collides(other) for other in self.rectangles])
+
+    def _cleanup_downloads(self):
+        [os.remove(os.path.join(self.download_path, image))
+         for image in os.listdir(self.download_path)]
+
+    def _find_objects(self) -> None:
+        for image in os.listdir(self.download_path):
+            if not image.endswith(("jpg", "png")):
+                continue
+            image = cv2.imread(f"{Settings.object_image_path}/{image}")
+
+            edge_detector = EdgeDetector(image)
+            edge_detector.draw_image_as_contours()
+
+            obj = edge_detector.obj_in_image
+            if obj is not None:
+                self.objects.append(obj)
+
+        return
 
     def _place_objects(self) -> None:
         H, W = self.background.shape[:2]
@@ -82,11 +91,5 @@ class ObjectHandler:
             current.x2 = int(current.x1+w)
             current.y2 = int(current.y1+h)
             self.rectangles.append(current)
+
         return
-
-    def has_collisions(self, rect: Rectangle) -> bool:
-        return any([rect.collides(other) for other in self.rectangles])
-
-    def cleanup_downloads(self):
-        [os.remove(os.path.join(self.download_path, image))
-         for image in os.listdir(self.download_path)]

@@ -31,13 +31,14 @@ class TestEdgeDetector(unittest.TestCase):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def test_crop_object_from_images(self):
+    @staticmethod
+    def test_crop_object_from_images():
         for image in os.listdir("test_imgs"):
-            if not image.endswith('jpg'):
+            if not image.endswith(('jpg', 'png')):
                 continue
-            self.image = cv2.imread(f"test_imgs/{image}")
-            self.ed = EdgeDetector(self.image)
-            self.ed.draw_image_as_contours()
-            cv2.imshow("object", self.ed.obj_in_image)
+            image = cv2.imread(f"test_imgs/{image}")
+            ed = EdgeDetector(image)
+            ed.draw_image_as_contours()
+            cv2.imshow("pizza", ed.obj_in_image)
             cv2.waitKey(0)
         cv2.destroyAllWindows()
