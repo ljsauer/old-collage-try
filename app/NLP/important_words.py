@@ -26,15 +26,12 @@ class ImportantWords:
 
     def _clean_text(self) -> List[str]:
         text_lower = word_tokenize(self.text.lower())
-        _stopwords = set(stopwords.words('english') +
-                         list(punctuation) +
-                         Settings.undesired_words)
-        nums = [str(n) for n in range(0, 10)]
+        _stopwords = [
+            stopwords.words('english') +
+            list(punctuation) +
+            Settings.undesired_words
+        ]
 
-        words = [word.replace(r'\n', '').replace(r'\r', '') for
-                 word in text_lower if word not in _stopwords]
-
-        for word in words:
-            if any([n in word for n in nums]) or len(word) < 4 or "x" in word:
-                words.remove(word)
-        return words
+        return [word.strip("-/',.1234567890~") for word in
+                text_lower if word not in _stopwords if
+                len(word) > 3]

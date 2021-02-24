@@ -12,16 +12,14 @@ class Settings:
         print("Making download path at: ", object_image_path)
         os.mkdir(object_image_path)
     n_words: int = 25    # number of important words from text to include in collage
-    n_sentences: int = 10   # not used in this project currently
     image_per_word: int = 4   # number of images to represent each word in collage
-    image_width: int = 1024   # width of the image collage
-    image_height: int = 768   # height of the image collage
-    max_object_size: int = int(image_width * .2)
-    max_word_size: int = 150
+    image_width: int = 1280   # width of the image collage
+    image_height: int = 960   # height of the image collage
+    max_word_size: int = 175
     undesired_words: List[str] = [
         "said", "might", "towards", "found", "must", "things", "last", "make",
         "upon", "shall", "gutenberg", "many", "with", "without", "like",
-        "project", "thee", "thou", "thus"
+        "project", "thee", "thou", "thus", "x80", "x9d", "x9ci", "xe2"
     ]
 
     colormaps: List[str] = [

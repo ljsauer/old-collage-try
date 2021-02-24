@@ -10,32 +10,17 @@ from app.settings import Settings
 
 
 class ImageSearch:
-    SEARCH_PARAMS = {
-        "q": "",
-        "num": Settings.image_per_word,
-        "safe": "high",
-        "fileType": "jpg|png",
-        "imgSize": "LARGE" or "MEDIUM" or "XLARGE"
-    }
-    API_KEY = "AIzaSyCNQjfV2lC1qr8XQWPD2RACTW_0-Z6JudA"
-    CX_ID = "62086768b7299d083"
-
     def __init__(self, keyword: str):
         self.keyword = keyword
         self.download_path = Settings.object_image_path
 
-        self.SEARCH_PARAMS.update({"q": keyword})
-
     def download_google_images(self):
-        # try:
-        #     # Image Search 2.0
-        #     gis = GoogleImagesSearch(developer_key=self.API_KEY, custom_search_cx=self.CX_ID)
-        #     gis.search(search_params=self.SEARCH_PARAMS, path_to_dir=self.download_path)
-        # except HttpError:
-        #     print(f"query limit reached -- reverting to Image Search v1.0")
-        url = f'https://www.google.com/search?q={self.keyword}+images' \
-              f'&tbm=isch&hl=en&safe=active&%2Cisz:l&sa=X' \
-              f'&ved=0CAIQpwVqFwoTCIiQ6KKW7O4CFQAAAAAdAAAAABAC&biw=1032&bih=1707'
+        # Search params:
+        # - safe search
+        # - transparent background
+        url = f"https://www.google.com/search?as_st=y&" \
+              f"tbm=isch&hl=en&as_q={self.keyword}&as_epq=&as_oq=&" \
+              f"as_eq=&cr=&as_sitesearch=&safe=active"
 
         page = requests.get(url).text
         soup = BeautifulSoup(page, 'html.parser')
@@ -52,11 +37,6 @@ class ImageSearch:
                 f.write(img_response.content)
                 f.close()
             count += 1
-
-    @staticmethod
-    def is_valid(url: str):
-        parsed = urlparse(url)
-        return bool(parsed.netloc) and bool(parsed.scheme)
 
     def cleanup_downloads(self):
         [os.remove(f"{self.download_path}/{image}") for image in os.listdir(self.download_path)]

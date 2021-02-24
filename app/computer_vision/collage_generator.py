@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 from wordcloud import WordCloud
 
-from app.NLP.significant_sentences import ImportantWords
+from app.NLP.important_words import ImportantWords
 from app.computer_vision.edge_detector import EdgeDetector
 from app.computer_vision.rectangle import Rectangle
 from app.settings import Settings
