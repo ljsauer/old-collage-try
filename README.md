@@ -14,5 +14,6 @@ __________________
    3. then `nltk.download('punkt')`
    4. lastly `nltk.download('stopwords')`
    5. That will put the language dictionaries needed for the Natural Language Processing portion of the app in the proper places
-6. From the root project directory, run `python main.py` and start uploading your own text files to make some ~art~!
+6. From the root project directory, run `python main.py` and start uploading your own text files to make some ~ art ~!
+
 ![sample collage](https://github.com/ljsauer/old-collage-try/blob/master/python-wiki.jpg?raw=true)
