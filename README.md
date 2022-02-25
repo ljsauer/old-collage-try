@@ -3,7 +3,6 @@
 __________________
 ## How it works (TBD)
 
-__________________
 ## Setup
 > I recommend downloading [PyCharm](https://www.jetbrains.com/pycharm/download/#section=windows) if you're not a venv expert. It makes the setup process a bit more straightforward, so I will assume that's how you're doing it in this README.
 1. Clone the repo ([link for ssh cloning](git@github.com:ljsauer/old-collage-try.git))
