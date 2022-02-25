@@ -4,6 +4,9 @@ from pony.orm import Required, select, db_session, StrArray, PrimaryKey, Optiona
 
 from db.database import start_db
 
+with open('db/database.sqlite', 'w') as db_file:
+    # Create new database file if none exists
+    pass
 
 db = start_db()
 

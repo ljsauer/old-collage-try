@@ -9,7 +9,7 @@ from app.computer_vision.collage_generator import CollageGenerator
 from app.settings import Settings
 from db.models.collage import Collage
 
-app = Flask(__name__, template_folder='../templates', static_folder='../static')
+app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = "shh"
 
 

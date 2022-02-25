@@ -1,10 +1,7 @@
 import os
-from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
-# from google_images_search import GoogleImagesSearch
-# from googleapiclient.errors import HttpError
 
 from app.settings import Settings
 
